@@ -1,0 +1,74 @@
+<marquee style="color: blue;">вітаю на моєму сайті :3</marquee>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #click-button {
+      padding: 10px 20px;
+      font-size: 24px;
+      cursor: pointer;
+      color: white;
+      background-color: #800080;
+      border: 3px solid #4B0082;
+      border-radius: 5px;
+      font-family: Arial, sans-serif;
+      text-transform: uppercase;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #click-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    }
+    #click-count {
+      color: white;
+      font-size: 24px;
+      margin-left: 10px;
+      font-family: Arial, sans-serif;
+    }
+    #secret-message {
+      display: none;
+      color: yellow;
+      font-size: 24px;
+      margin-top: 20px;
+      font-family: Arial, sans-serif;
+    }
+    #secret-image {
+      display: none;
+      margin-top: 20px;
+      width: 300px;
+      height: auto;
+    }
+  </style>
+</head>
+<body style="background-color: black;">
+
+  <audio id="reveal-sound">
+    <source src="https://www.dropbox.com/scl/fi/0o27mnz2bswno97bv3hek/Creepy-Bell-Sound-Effect.mp3?rlkey=n7c19xm7u6iz7p0e3xzhttl70&st=nf2c2p71&dl=1" type="audio/mpeg">
+  </audio>
+
+  <button id="click-button" onclick="incrementCounter()">натисни!</button>
+  <span id="click-count">0</span>
+  <div id="secret-message">фрізер прийде..</div>
+  <img id="secret-image" src="https://i.imgur.com/RV7jCyY.png" alt="Secret Image">
+
+  <script>
+    let count = 0;
+    function incrementCounter() {
+      count++;
+      document.getElementById('click-count').textContent = count;
+      if (count === 33) {
+        document.getElementById('secret-message').style.display = 'block';
+        document.getElementById('secret-image').style.display = 'block';
+        document.getElementById('reveal-sound').play();
+      } else if (count > 33) {
+        document.getElementById('secret-message').style.display = 'none';
+        document.getElementById('secret-image').style.display = 'none';
+      }
+    }
+  </script>
+
+</body>
+</html>
+

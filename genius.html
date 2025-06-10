@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Сингулярний Геній</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      background: #000;
+      font-family: 'Press Start 2P', monospace;
+      overflow: hidden;
+    }
+
+    #container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    video#character {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      z-index: 3;
+      cursor: pointer;
+    }
+
+    #speech {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.95);
+      color: #111;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      text-align: center;
+      white-space: pre-wrap;
+      box-shadow: 0 0 8px #fff;
+      display: none;
+      z-index: 2;
+      max-width: 80vw;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <video id="character" src="https://i.imgur.com/wODWeMU.mp4" preload="auto" playsinline muted></video>
+  <div id="overlay" title="Клікни на мене!"></div>
+  <div id="speech"></div>
+</div>
+
+<audio id="pixelSound" src="https://www.dropbox.com/scl/fi/abmb1agjjlpv5v4yukuwf/singularvoice.wav?rlkey=uxwqob0kn6kuasvun6b4ln3ba&st=rgdtl5hg&dl=1" preload="auto"></audio>
+
+<script>
+  const regularPhrases = [
+    "Фрукти? Пасхалки? Що ти верзеш?",
+    "Я бачу очі",
+    "Я вибрав знання",
+    "Поверни мені мій канал",
+    "Я проклинаю твоє ім'я",
+    "Залиш мене в спокої",
+    "Нові відео кожного світлового року",
+    "Сузір'я гарні. Коли не говорять зі мною.",
+    "Насправді, божевільний ти",
+    "Заберись з моїх очей!",
+    "І це ти називаєш світом? 1920х1080? Як ти щось бачиш?",
+    "*Сингулярний Геній почав співати оперу, не звертаючи уваги на вас*",
+    "Чому Я?",
+    "Одним з цих кварків був Я..",
+    "Прибульців бачив? Я з таким ділю канал.",
+    "Знав одного доктора - Фруктом звали.. Славний чоловік.",
+    "Спокійніше. Хто такий Мік, та в чому він профі?",
+    "Скільки Пінатів потрібно щоб вкрутити лампочку?",
+    "Закручувати Гайки - не мішки воротити",
+    "Мені здається, цей ютубер схожий на Слідана. Який саме? Ну, той, який знімає відео.",
+    "Спочатку думай, потім говори.",
+    "Я мало чого боюсь, але Фруктовий Чат.."
+  ];
+
+  const secretDialogues = [
+    [
+      "Хочеш сказати, що ти справжній?",
+      "А що як справжній Я, а ти просто імітація?",
+      "Подумай. А я продовжу клікати на тебе. Твоя реакція мене забавляє. Блазень."
+    ],
+    [
+      "...",
+      "Досить",
+      ".....",
+      "Я сказав досить.",
+      "Добре, як забажаєш.",
+      "...", "...", "...", "...", "...", "...",
+      "Це рядок #33"
+    ],
+    [
+      "Я бачу очі..",
+      "Прямо за тобою!"
+    ],
+    [
+      "Хочеш, передбачу твоє майбутнє?",
+      "Дай свою руку!",
+      "Гм.. Тут багато цікавого..",
+      "...",
+      "Що? Ні, не розповім."
+    ],
+    [
+      "Зовсім скоро, світ охопить суцільна пітьма..",
+      "Пам'ятай, бо це буду я."
+    ],
+    [
+      "Фарадей? Цей самозванець? Не сміши мене. Очевидно, мої відео кращі.",
+      "Ти так не вважаєш?",
+      "Блазень."
+    ],
+    [
+      "Давай розповім тобі історію",
+      "Колись, у всесвіті жив простак, який любив пхати руки куди не треба..",
+      "Одного разу, він засунув руку в чорну діру.",
+      "Його розчепило на кварки, а весь світ рухнув через цю дію..",
+      "Сподіваюсь, це чомусь навчить тебе.."
+    ]
+  ];
+
+  const video = document.getElementById("character");
+  const overlay = document.getElementById("overlay");
+  const speech = document.getElementById("speech");
+  const pixelSound = document.getElementById("pixelSound");
+
+  let speakTimeout, textInterval;
+  let isTyping = false;
+
+  function clearSpeech() {
+    clearTimeout(speakTimeout);
+    clearInterval(textInterval);
+    pixelSound.pause();
+    pixelSound.currentTime = 0;
+    video.pause();
+    speech.style.display = "none";
+    isTyping = false;
+  }
+
+  function typeText(text, callback) {
+    clearSpeech();
+    isTyping = true;
+    speech.textContent = "";
+    speech.style.display = "block";
+    let i = 0;
+
+    video.currentTime = 0;
+    video.play();
+
+    textInterval = setInterval(() => {
+      speech.textContent += text.charAt(i);
+      try {
+        pixelSound.currentTime = 0;
+        pixelSound.play();
+      } catch (e) {}
+
+      i++;
+      if (i >= text.length) {
+        clearInterval(textInterval);
+        speakTimeout = setTimeout(() => {
+          speech.style.display = "none";
+          video.pause();
+          isTyping = false;
+        }, 5000);
+        if (callback) callback();
+      }
+    }, 50);
+  }
+
+  function playDialogue(dialogue) {
+    let index = 0;
+    function next() {
+      if (index < dialogue.length) {
+        typeText(dialogue[index], () => {
+          index++;
+          setTimeout(next, 1000);
+        });
+      }
+    }
+    next();
+  }
+
+  overlay.addEventListener("click", () => {
+    clearSpeech();
+
+    const isSecret = Math.random() < 0.1;
+    if (isSecret) {
+      const dialogue = secretDialogues[Math.floor(Math.random() * secretDialogues.length)];
+      playDialogue(dialogue);
+    } else {
+      const phrase = regularPhrases[Math.floor(Math.random() * regularPhrases.length)];
+      typeText(phrase);
+    }
+  });
+</script>
+
+</body>
+</html>
