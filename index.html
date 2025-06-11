@@ -276,4 +276,57 @@
 </script>
 
 </body>
+  <!-- Додаємо всередині <body>, після інших елементів -->
+
+<script>
+  let moved = false;
+
+  function incrementCounter() {
+    clickCount++;
+    clickCountElement.textContent = clickCount;
+
+    if (clickCount >= 33) {
+      secretMessage.style.display = 'block';
+      secretImage.style.display = 'block';
+      if (!soundPlayed) {
+        freezeSound.play();
+        soundPlayed = true;
+      }
+    }
+
+    if (!moved) {
+      moved = true;
+
+      // Створюємо рухоме зображення
+      const movingImg = document.createElement('img');
+      movingImg.src = 'https://i.imgur.com/W1VyVK4.png';
+      movingImg.style.position = 'fixed';
+      movingImg.style.top = '0';
+      movingImg.style.left = '0';
+      movingImg.style.width = '150px';  // можна змінити розмір
+      movingImg.style.height = 'auto';
+      movingImg.style.transition = 'top 5s ease, left 5s ease, opacity 1s ease 5s';
+      movingImg.style.zIndex = 9999;
+      document.body.appendChild(movingImg);
+
+      // Через невеликий таймаут запускаємо анімацію
+      setTimeout(() => {
+        movingImg.style.top = (window.innerHeight - movingImg.offsetHeight) + 'px';
+        movingImg.style.left = (window.innerWidth - movingImg.offsetWidth) + 'px';
+      }, 50);
+
+      // Через 6 секунд (5 на рух + 1 на зникнення) ховаємо і видаляємо зображення
+      setTimeout(() => {
+        movingImg.style.opacity = '0';
+      }, 5500);
+
+      setTimeout(() => {
+        if (movingImg.parentNode) {
+          movingImg.parentNode.removeChild(movingImg);
+        }
+      }, 6500);
+    }
+  }
+</script>
+</body>
 </html>
