@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <title>Райдужний хвостик + динамічне зоряне небо</title>
+  <title>Райдужна стрічка + мерехтливі зорі</title>
   <style>
     /* Темний фон */
     body {
@@ -14,53 +14,39 @@
       position: relative;
     }
 
-    /* Зорі — багато маленьких білих точок */
-    body::before {
-      content: "";
+    /* Зорі — маленькі біленькі крапки, які мерехтять */
+    .star {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background:
-        radial-gradient(1px 1px at 10% 20%, white, transparent),
-        radial-gradient(1.2px 1.2px at 25% 40%, #ccc, transparent),
-        radial-gradient(1px 1px at 50% 60%, #eee, transparent),
-        radial-gradient(1.1px 1.1px at 75% 15%, #bbb, transparent),
-        radial-gradient(1.3px 1.3px at 85% 80%, white, transparent);
-      background-repeat: repeat;
-      background-size: 120px 120px;
-      pointer-events: none;
-      z-index: 0;
-      animation: starsMove 20s linear infinite;
-      filter: drop-shadow(0 0 2px white);
-    }
-
-    @keyframes starsMove {
-      0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
-      100% { background-position: 120px 120px, 60px 120px, 30px 80px, 100px 150px, 80px 110px; }
-    }
-
-    /* Контейнер для райдужного хвостика */
-    #trail-container {
-      position: fixed;
-      top: 0; left: 0;
-      pointer-events: none;
-      width: 100vw;
-      height: 100vh;
-      overflow: visible;
-      z-index: 9999;
-    }
-
-    /* Окремий сегмент хвоста */
-    .trail-segment {
-      position: absolute;
-      width: 20px;
-      height: 6px;
-      border-radius: 10px;
-      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      background: white;
+      border-radius: 50%;
       opacity: 0.8;
-      filter: drop-shadow(0 0 4px rgba(255 255 255 / 0.2));
       pointer-events: none;
-      transform-origin: center;
-      transition: opacity 1s ease-out, transform 1s ease-out;
+      animation-name: twinkle;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in-out;
+    }
+
+    /* Анімація мерехтіння */
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* Контейнер для хвоста (щоб можна було позиціювати) */
+    #trail {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+      filter: drop-shadow(0 0 5px rgba(255 255 255, 0.6));
+      mix-blend-mode: screen; /* Крутий ефект накладення */
+      transform: translate(-50%, -50%);
+      transition: top 0.1s ease-out, left 0.1s ease-out;
+      z-index: 9999;
     }
   </style>
 </head>
@@ -68,50 +54,56 @@
 
   <marquee style="color: blue;">вітаю на моєму сайті :3</marquee>
 
-  <div id="trail-container"></div>
+  <div id="trail"></div>
 
   <script>
-    const trailContainer = document.getElementById('trail-container');
-    const maxSegments = 20;
-    const segments = [];
+    const trail = document.getElementById('trail');
+
+    // Функція плавного слідування (плавний рух стрічки)
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let trailX = mouseX;
+    let trailY = mouseY;
 
     document.addEventListener('mousemove', e => {
-      // Створюємо сегмент хвоста
-      const segment = document.createElement('div');
-      segment.className = 'trail-segment';
-      trailContainer.appendChild(segment);
-      segments.push(segment);
-
-      // Розташування сегменту з невеликим зсувом вгору/вниз (щоб хвостик "жив")
-      const yOffset = Math.sin(Date.now() / 150) * 5;
-      segment.style.left = (e.clientX - 10) + 'px';
-      segment.style.top = (e.clientY + yOffset) + 'px';
-
-      // Поворот сегменту за напрямом руху (проста імітація)
-      if (segments.length > 1) {
-        const prev = segments[segments.length - 2];
-        if (prev) {
-          const dx = e.clientX - parseFloat(prev.style.left);
-          const dy = e.clientY - parseFloat(prev.style.top);
-          const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-          segment.style.transform = `rotate(${angle}deg)`;
-        }
-      }
-
-      // Видаляємо зайві сегменти, поступово зникають
-      if (segments.length > maxSegments) {
-        const old = segments.shift();
-        old.style.opacity = '0';
-        old.style.transform += ' scale(2)';
-        setTimeout(() => {
-          if(old.parentNode) old.parentNode.removeChild(old);
-        }, 1000);
-      }
+      mouseX = e.clientX;
+      mouseY = e.clientY;
     });
+
+    function animate() {
+      // Плавне наближення до позиції курсора
+      trailX += (mouseX - trailX) * 0.15;
+      trailY += (mouseY - trailY) * 0.15;
+
+      trail.style.left = trailX + 'px';
+      trail.style.top = trailY + 'px';
+
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Створюємо зірки випадково на сторінці
+    const starCount = 150;
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      const size = Math.random() * 2 + 1; // 1-3px
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.top = Math.random() * window.innerHeight + 'px';
+      star.style.left = Math.random() * window.innerWidth + 'px';
+
+      // Рандомна тривалість та затримка мерехтіння
+      star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      star.style.animationDelay = (Math.random() * 5) + 's';
+
+      document.body.appendChild(star);
+    }
   </script>
 
 </body>
 </html>
+
 
 <!DOCTYPE html>
 <html>
