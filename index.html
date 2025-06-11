@@ -8,7 +8,6 @@
 <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
 <script>
   window.addEventListener("load", () => {
-    // Розкоментуємо цей рядок, щоб повернути райдужний ефект
     new cursoreffects.rainbowCursor();
   });
 </script>
@@ -26,7 +25,6 @@
     min-height: 100vh;
     padding: 20px;
     overflow-x: hidden;
-    /* Використання власного курсору для всього тіла */
     cursor: url('https://www.dropbox.com/scl/fi/2e65af9y0y9jshubveang/normal.cur?rlkey=zw7sz8kpgwcn692xu1stxjvp1&raw=1'), auto;
   }
 
@@ -60,7 +58,6 @@
     text-decoration: none;
     border-bottom: 1px dotted #0f0;
     transition: color 0.2s;
-    /* Використання власного курсору для посилань */
     cursor: url('https://www.dropbox.com/scl/fi/b08ub8z0imt0akdhaxb4k/link.cur?rlkey=aaoj9v3grlenr0rszdm6e2ewk&raw=1'), pointer;
   }
   a:hover {
@@ -69,7 +66,6 @@
     text-shadow: 0 0 10px #afa;
   }
 
-  /* Ретро-ефекти */
   .terminal-text {
     white-space: pre-wrap;
     font-size: 1.1em;
@@ -77,7 +73,6 @@
     letter-spacing: 0.05em;
   }
 
-  /* Нижній футер */
   footer {
     margin-top: 30px;
     font-size: 0.8em;
@@ -85,7 +80,6 @@
     text-shadow: 0 0 2px #0f0;
   }
 
-  /* Зорі */
   .star {
     position: fixed;
     background: white;
@@ -123,7 +117,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s, box-shadow 0.2s;
     margin-right: 15px;
-    cursor: url('https://www.dropbox.com/scl/fi/b08ub8z0imt0akdhaxb4k/link.cur?rlkey=aaoj9v3grlenr0rszdm6e2ewk&raw=1'), pointer; /* Курсор для кнопки */
+    cursor: url('https://www.dropbox.com/scl/fi/b08ub8z0imt0akdhaxb4k/link.cur?rlkey=aaoj9v3grlenr0rszdm6e2ewk&raw=1'), pointer;
   }
   #click-button:hover {
     transform: translateY(-2px);
@@ -160,7 +154,7 @@
     text-transform: uppercase;
     box-shadow: 0 4px 8px rgba(128, 0, 128, 0.3);
     transition: transform 0.2s, box-shadow 0.2s;
-    cursor: url('https://www.dropbox.com/scl/fi/b08ub8z0imt0akdhaxb4k/link.cur?rlkey=aaoj9v3grlenr0rszdm6e2ewk&raw=1'), pointer; /* Курсор для кнопки */
+    cursor: url('https://www.dropbox.com/scl/fi/b08ub8z0imt0akdhaxb4k/link.cur?rlkey=aaoj9v3grlenr0rszdm6e2ewk&raw=1'), pointer;
   }
   #go-second-page:hover {
     transform: translateY(-2px);
@@ -254,22 +248,23 @@
   const secretMessage = document.getElementById('secret-message');
   const secretImage = document.getElementById('secret-image');
 
+  // Створюємо аудіо об'єкт для звуку
+  const freezeSound = new Audio('https://www.dropbox.com/scl/fi/0o27mnz2bswno97bv3hek/Creepy-Bell-Sound-Effect.mp3?rlkey=n7c19xm7u6iz7p0e3xzhttl70&st=nf2c2p71&dl=1');
+  let soundPlayed = false;
+
   function incrementCounter() {
     clickCount++;
     clickCountElement.textContent = clickCount;
 
-    // Показувати повідомлення тільки після 33 кліків
-    if (clickCount >= 33) {
+    if (clickCount >= 10) {
       secretMessage.style.display = 'block';
-    } else {
-      secretMessage.style.display = 'none';
     }
-
-    // Показувати картинку після 20 кліків (як було)
     if (clickCount >= 20) {
       secretImage.style.display = 'block';
-    } else {
-      secretImage.style.display = 'none';
+    }
+    if (clickCount >= 33 && !soundPlayed) {
+      freezeSound.play();
+      soundPlayed = true;
     }
   }
 </script>
