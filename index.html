@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <title>Райдужна стрічка + мерехтливі зорі</title>
+  <title>Суцільна Райдужна Стрічка + мерехтливі зорі</title>
   <style>
     /* Темний фон */
     body {
@@ -33,30 +33,29 @@
       50% { opacity: 1; }
     }
 
-    /* Елементи хвоста - маленькі райдужні краплі */
-    .rainbow-dot {
+    /* Контейнер для суцільної райдужної стрічки */
+    #trail-container {
       position: fixed;
-      width: 15px; /* Розмір окремої "краплі" хвоста */
-      height: 15px;
-      border-radius: 50%;
-      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet); /* Райдужний градієнт */
-      opacity: 0; /* Починаємо з прозорого */
-      pointer-events: none;
-      transform: translate(-50%, -50%) scale(0); /* Починаємо з центру і зменшеного */
-      animation: fadeOutAndShrink 1s forwards ease-out; /* Анімація зникнення */
-      z-index: 10000; /* Переконаємось, що хвіст видно поверх інших елементів */
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none; /* Щоб не блокувати взаємодію з елементами під ним */
+      overflow: hidden; /* Обрізаємо стрічку, що виходить за межі екрану */
+      z-index: 9999;
     }
 
-    /* Анімація зникнення та зменшення для елементів хвоста */
-    @keyframes fadeOutAndShrink {
-      0% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0);
-      }
+    /* Елементи, що формують стрічку */
+    .trail-segment {
+      position: absolute;
+      width: 15px; /* Ширина сегмента стрічки */
+      height: 15px; /* Висота сегмента стрічки */
+      border-radius: 50%; /* Робимо їх круглими */
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet); /* Райдужний градієнт */
+      transform: translate(-50%, -50%); /* Центруємо відносно курсора */
+      transition: opacity 0.5s linear; /* Плавне зникнення */
+      opacity: 1; /* Спочатку повністю видимі */
+      will-change: transform, opacity; /* Оптимізація анімації */
     }
   </style>
 </head>
@@ -64,19 +63,49 @@
 
   <marquee style="color: blue;">вітаю на моєму сайті :3</marquee>
 
+  <div id="trail-container"></div>
+
   <script>
-    // ----------- Скрипт для райдужного хвоста -----------
+    // ----------- Скрипт для суцільної райдужної стрічки -----------
+    const trailContainer = document.getElementById('trail-container');
+    const segments = []; // Масив для зберігання всіх сегментів стрічки
+    const maxSegments = 30; // Максимальна кількість сегментів у стрічці (довжина хвоста)
+    const segmentLifetime = 50; // Час, через який додається новий сегмент (в мс)
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+    let lastSegmentTime = 0;
+
     document.addEventListener('mousemove', e => {
-      const dot = document.createElement('div');
-      dot.classList.add('rainbow-dot');
-      dot.style.left = e.clientX + 'px';
-      dot.style.top = e.clientY + 'px';
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
 
-      document.body.appendChild(dot);
+      const currentTime = Date.now();
+      if (currentTime - lastSegmentTime > segmentLifetime) {
+        lastSegmentTime = currentTime;
 
-      // Видаляємо елемент хвоста після завершення анімації, щоб не перевантажувати DOM
-      dot.addEventListener('animationend', () => {
-        dot.remove();
+        const segment = document.createElement('div');
+        segment.classList.add('trail-segment');
+        segment.style.left = lastMouseX + 'px';
+        segment.style.top = lastMouseY + 'px';
+
+        trailContainer.appendChild(segment);
+        segments.push(segment);
+
+        // Обмежуємо кількість сегментів
+        if (segments.length > maxSegments) {
+          const oldestSegment = segments.shift(); // Видаляємо найстаріший сегмент з початку масиву
+          // Запускаємо його анімацію зникнення, якщо він ще не зник
+          oldestSegment.style.opacity = 0;
+          oldestSegment.addEventListener('transitionend', () => {
+            oldestSegment.remove();
+          }, { once: true }); // Видалити лише один раз після завершення анімації
+        }
+      }
+
+      // Оновлюємо прозорість всіх сегментів для ефекту затухання
+      segments.forEach((seg, index) => {
+        // Чим далі сегмент від голови стрічки (чим він старіший), тим він прозоріший
+        seg.style.opacity = (index / maxSegments);
       });
     });
 
