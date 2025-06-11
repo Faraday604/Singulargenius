@@ -8,8 +8,8 @@
     });
   </script>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ретро-сайт</title>
   <style>
     body {
@@ -17,7 +17,7 @@
       min-height: 100vh;
       background: #000000;
       overflow: hidden;
-      cursor: url('https://i.imgur.com/Bgwzmcz.png') 0 0, auto;
+      cursor: url('https://www.dropbox.com/scl/fi/2e65af9y0y9jshubveang/normal.cur?rlkey=zw7sz8kpgwcn692xu1stxjvp1&raw=1'), auto;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -28,7 +28,7 @@
     button,
     #click-button,
     #go-second-page {
-      cursor: url('https://i.imgur.com/Ao3vBQU.png') 0 0, pointer;
+      cursor: url('https://www.dropbox.com/scl/fi/b08ub8z0imt0akdhaxb4k/link.cur?rlkey=aaoj9v3grlenr0rszdm6e2ewk&raw=1'), pointer;
     }
 
     .star {
@@ -44,13 +44,18 @@
     }
 
     @keyframes twinkle {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 1; }
+      0%,
+      100% {
+        opacity: 0.2;
+      }
+      50% {
+        opacity: 1;
+      }
     }
 
     marquee {
-      color: #00FFFF;
-      font-family: 'Courier New', Courier, monospace;
+      color: #00ffff;
+      font-family: "Courier New", Courier, monospace;
       font-size: 1.2em;
       text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
       z-index: 1000;
@@ -63,7 +68,7 @@
       font-size: 24px;
       color: white;
       background-color: #800080;
-      border: 3px solid #4B0082;
+      border: 3px solid #4b0082;
       border-radius: 5px;
       text-transform: uppercase;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -119,13 +124,12 @@
   </style>
 </head>
 <body>
-
   <marquee behavior="scroll" direction="left" scrollamount="4">
     Привіт o_O — вітаю на моєму сайті :3
   </marquee>
 
   <audio id="reveal-sound">
-    <source src="https://www.dropbox.com/scl/fi/0o27mnz2bswno97bv3hek/Creepy-Bell-Sound-Effect.mp3?rlkey=n7c19xm7u6iz7p0e3xzhttl70&st=nf2c2p71&dl=1" type="audio/mpeg">
+    <source src="https://www.dropbox.com/scl/fi/0o27mnz2bswno97bv3hek/Creepy-Bell-Sound-Effect.mp3?rlkey=n7c19xm7u6iz7p0e3xzhttl70&st=nf2c2p71&dl=1" type="audio/mpeg" />
   </audio>
 
   <div>
@@ -138,21 +142,21 @@
   </div>
 
   <div id="secret-message">фрізер прийде..</div>
-  <img id="secret-image" src="https://i.imgur.com/RV7jCyY.png" alt="Secret Image">
+  <img id="secret-image" src="https://i.imgur.com/RV7jCyY.png" alt="Secret Image" />
 
   <script>
     // Зорі
     const starCount = 150;
     for (let i = 0; i < starCount; i++) {
-      const star = document.createElement('div');
-      star.classList.add('star');
+      const star = document.createElement("div");
+      star.classList.add("star");
       const size = Math.random() * 2 + 1;
-      star.style.width = size + 'px';
-      star.style.height = size + 'px';
-      star.style.top = Math.random() * window.innerHeight + 'px';
-      star.style.left = Math.random() * window.innerWidth + 'px';
-      star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      star.style.animationDelay = (Math.random() * 5) + 's';
+      star.style.width = size + "px";
+      star.style.height = size + "px";
+      star.style.top = Math.random() * window.innerHeight + "px";
+      star.style.left = Math.random() * window.innerWidth + "px";
+      star.style.animationDuration = Math.random() * 3 + 2 + "s";
+      star.style.animationDelay = Math.random() * 5 + "s";
       document.body.appendChild(star);
     }
 
@@ -160,18 +164,17 @@
     let count = 0;
     function incrementCounter() {
       count++;
-      document.getElementById('click-count').textContent = count;
+      document.getElementById("click-count").textContent = count;
       if (count === 33) {
-        document.getElementById('secret-message').style.display = 'block';
-        document.getElementById('secret-image').style.display = 'block';
-        document.getElementById('reveal-sound').play();
+        document.getElementById("secret-message").style.display = "block";
+        document.getElementById("secret-image").style.display = "block";
+        document.getElementById("reveal-sound").play();
       } else if (count > 33) {
-        document.getElementById('secret-message').style.display = 'none';
-        document.getElementById('secret-image').style.display = 'none';
+        document.getElementById("secret-message").style.display = "none";
+        document.getElementById("secret-image").style.display = "none";
       }
     }
   </script>
-
 </body>
 </html>
 
