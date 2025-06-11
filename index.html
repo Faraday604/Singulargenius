@@ -1,117 +1,104 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Про мене - ретро сітка</title>
-  <style>
-    /* Чистий чорний фон з зеленою сіткою */
-    body {
-      margin: 0;
-      background-color: #000;
-      background-image:
-        linear-gradient(#0f0 1px, transparent 1px),
-        linear-gradient(90deg, #0f0 1px, transparent 1px);
-      background-size: 40px 40px;
-      color: #0f0;
-      font-family: 'Courier New', Courier, monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ретро Сторінка</title>
+<style>
+  /* Основні стилі */
+  body {
+    margin: 0;
+    background-color: #000;
+    color: #0f0;
+    font-family: 'Courier New', Courier, monospace;
+    overflow-x: hidden;
+    cursor: crosshair; /* курсор як зараз */
+  }
 
-    h1, h2 {
-      color: #0f0;
-      margin-bottom: 10px;
-      font-weight: normal;
-    }
+  marquee {
+    color: #0f0;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1.3em;
+    padding: 10px 0;
+  }
 
-    .container {
-      max-width: 960px;
-      width: 100%;
-      background-color: rgba(0, 30, 0, 0.9);
-      border: 1px solid #0f0;
-      padding: 15px;
-      box-sizing: border-box;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 15px;
-    }
+  /* Контейнер для секцій */
+  .container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 10px;
+    box-sizing: border-box;
+  }
 
-    .box {
-      border: 1px solid #0f0;
-      padding: 10px;
-      background-color: rgba(0, 40, 0, 0.7);
-      font-size: 14px;
-      line-height: 1.4;
-    }
+  /* Кожен блок */
+  .box {
+    border: 1px solid #0f0;
+    background: rgba(0, 40, 0, 0.8);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+  }
 
-    a {
-      color: #0f0;
-      text-decoration: none;
-      border-bottom: 1px dotted #0f0;
-    }
-    a:hover {
-      border-bottom-style: solid;
-    }
+  h1, h2 {
+    margin-top: 0;
+  }
 
-    button {
-      background: none;
-      border: 1px solid #0f0;
-      color: #0f0;
-      font-family: 'Courier New', monospace;
-      font-size: 16px;
-      padding: 8px 16px;
-      cursor: pointer;
-      user-select: none;
-    }
-    button:hover {
-      background-color: #0f0;
-      color: #000;
-    }
+  a {
+    color: #0f0;
+    text-decoration: none;
+    border-bottom: 1px dotted #0f0;
+  }
+  a:hover {
+    border-bottom-style: solid;
+  }
 
-    #secret-message {
-      margin-top: 10px;
-      color: #0f0;
-      font-size: 14px;
-      white-space: pre-line;
-      display: none;
-    }
+  button {
+    background: none;
+    border: 1px solid #0f0;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    padding: 8px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  button:hover {
+    background-color: #0f0;
+    color: #000;
+  }
 
-    marquee {
-      color: #0f0;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 1.2em;
-      text-shadow: none;
-      z-index: 1000;
-      position: relative;
-      padding: 10px 0;
-    }
+  #secret-message {
+    margin-top: 10px;
+    color: #0f0;
+    font-size: 14px;
+    white-space: pre-line;
+    display: none;
+  }
 
-    /* Зорі */
-    .star {
-      position: fixed;
-      background: #0f0;
-      border-radius: 50%;
-      opacity: 0.6;
-      pointer-events: none;
-      animation-name: twinkle;
-      animation-iteration-count: infinite;
-      animation-timing-function: ease-in-out;
-      z-index: 0;
-    }
+  #secret-image {
+    display: none;
+    margin-top: 10px;
+    max-width: 100%;
+    height: auto;
+  }
 
-    @keyframes twinkle {
-      0%, 100% {opacity: 0.2;}
-      50% {opacity: 0.6;}
-    }
-
-    .button-container {
-      margin-top: 10px;
-    }
-  </style>
+  /* Зорі */
+  .star {
+    position: fixed;
+    background: #0f0;
+    border-radius: 50%;
+    opacity: 0.6;
+    pointer-events: none;
+    animation-name: twinkle;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    z-index: 0;
+  }
+  @keyframes twinkle {
+    0%, 100% {opacity: 0.2;}
+    50% {opacity: 0.6;}
+  }
+</style>
 </head>
 <body>
 
@@ -119,14 +106,10 @@
     Привіт o_O — вітаю на моєму сайті :3
   </marquee>
 
-  <h1>Про мене</h1>
-
   <div class="container">
     <section class="box">
-      <h2>Інформація</h2>
-      <p>
-        Привіт! Я [Твоє ім'я] — фанат ретро-стилю, кодування та всього, що пов'язано з класичним інтернетом. Тут збираю свої думки, посилання та цікаві штуки.
-      </p>
+      <h1>Про мене</h1>
+      <p>Привіт! Я [Твоє ім'я] — фанат ретро-стилю, кодування та всього, що пов'язано з класичним інтернетом. Тут збираю свої думки, посилання та цікаві штуки.</p>
     </section>
 
     <section class="box">
@@ -159,63 +142,57 @@
 
     <section class="box" style="text-align:center;">
       <h2>Наступна сторінка</h2>
-
-      <div class="button-container">
-        <button id="click-button">натисни!</button>
-        <span id="click-count">0</span>
-      </div>
-
-      <button id="go-second-page" style="margin-top:10px;">Перейти на другу сторінку</button>
-
+      <button id="click-button">натисни!</button> <span id="click-count">0</span>
+      <br />
+      <button id="go-second-page" style="margin-top: 10px;">Перейти на другу сторінку</button>
       <div id="secret-message">фрізер прийде..</div>
-      <img id="secret-image" src="https://i.imgur.com/RV7jCyY.png" alt="Secret Image" style="display:none; margin-top:10px; max-width:100%; height:auto;" />
-
+      <img id="secret-image" src="https://i.imgur.com/RV7jCyY.png" alt="Secret Image" />
       <audio id="reveal-sound" src="https://www.dropbox.com/scl/fi/0o27mnz2bswno97bv3hek/Creepy-Bell-Sound-Effect.mp3?rlkey=n7c19xm7u6iz7p0e3xzhttl70&st=nf2c2p71&dl=1" preload="auto"></audio>
     </section>
   </div>
 
-  <script>
-    // Зорі
-    const starCount = 150;
-    for (let i = 0; i < starCount; i++) {
-      const star = document.createElement("div");
-      star.classList.add("star");
-      const size = Math.random() * 2 + 1;
-      star.style.width = size + "px";
-      star.style.height = size + "px";
-      star.style.top = Math.random() * window.innerHeight + "px";
-      star.style.left = Math.random() * window.innerWidth + "px";
-      star.style.animationDuration = (Math.random() * 3 + 2) + "s";
-      star.style.animationDelay = Math.random() * 5 + "s";
-      document.body.appendChild(star);
+<script>
+  // Зорі
+  const starCount = 150;
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement("div");
+    star.classList.add("star");
+    const size = Math.random() * 2 + 1;
+    star.style.width = size + "px";
+    star.style.height = size + "px";
+    star.style.top = Math.random() * window.innerHeight + "px";
+    star.style.left = Math.random() * window.innerWidth + "px";
+    star.style.animationDuration = (Math.random() * 3 + 2) + "s";
+    star.style.animationDelay = Math.random() * 5 + "s";
+    document.body.appendChild(star);
+  }
+
+  // Клік-рахівник і сюрприз
+  let count = 0;
+  const clickBtn = document.getElementById('click-button');
+  const clickCount = document.getElementById('click-count');
+  const secretMsg = document.getElementById('secret-message');
+  const secretImg = document.getElementById('secret-image');
+  const revealSound = document.getElementById('reveal-sound');
+
+  clickBtn.addEventListener('click', () => {
+    count++;
+    clickCount.textContent = count;
+    if (count === 33) {
+      secretMsg.style.display = 'block';
+      secretImg.style.display = 'block';
+      revealSound.play();
+    } else if (count > 33) {
+      secretMsg.style.display = 'none';
+      secretImg.style.display = 'none';
     }
+  });
 
-    // Клік-рахівник і сюрприз
-    let count = 0;
-    const clickBtn = document.getElementById('click-button');
-    const clickCount = document.getElementById('click-count');
-    const secretMsg = document.getElementById('secret-message');
-    const secretImg = document.getElementById('secret-image');
-    const revealSound = document.getElementById('reveal-sound');
-
-    clickBtn.addEventListener('click', () => {
-      count++;
-      clickCount.textContent = count;
-      if (count === 33) {
-        secretMsg.style.display = 'block';
-        secretImg.style.display = 'block';
-        revealSound.play();
-      } else if (count > 33) {
-        secretMsg.style.display = 'none';
-        secretImg.style.display = 'none';
-      }
-    });
-
-    // Кнопка переходу на другу сторінку
-    document.getElementById('go-second-page').addEventListener('click', () => {
-      location.href = 'genius.html'; // змінити на потрібну сторінку
-    });
-  </script>
+  // Кнопка переходу на другу сторінку
+  document.getElementById('go-second-page').addEventListener('click', () => {
+    location.href = 'genius.html'; // зміни на потрібну
+  });
+</script>
 
 </body>
 </html>
