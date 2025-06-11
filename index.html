@@ -2,21 +2,31 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <title>Суцільна Райдужна Стрічка + мерехтливі зорі</title>
+  <title>Райдужна Стрічка на Canvas + мерехтливі зорі</title>
   <style>
-    /* Темний фон */
+    /* Темний фон - тепер він буде задаватися всередині iframe */
     body {
       margin: 0;
-      height: 100vh;
+      height: 100vh; /* Забезпечуємо повну висоту */
       background: #000008; /* Майже чорний, для ефекту космосу */
-      overflow: hidden;
+      overflow: hidden; /* Приховуємо скролбари */
       cursor: crosshair; /* Курсор прицілу, дуже ретро */
-      position: relative;
+      position: relative; /* Для позиціонування зірок та канвасу */
+    }
+
+    /* Канвас для райдужної стрічки */
+    #rainbowCanvas {
+      position: absolute; /* Абсолютне позиціонування всередині body */
+      top: 0;
+      left: 0;
+      display: block; /* Прибираємо зайві відступи */
+      pointer-events: none; /* Канвас не повинен блокувати кліки під ним */
+      z-index: 10000; /* Переконаємося, що стрічка поверх інших елементів */
     }
 
     /* Зорі — маленькі біленькі крапки, які мерехтять */
     .star {
-      position: fixed;
+      position: fixed; /* Fixed position відносно вікна iframe */
       background: white;
       border-radius: 50%;
       opacity: 0.8;
@@ -27,39 +37,114 @@
       z-index: 0; /* Зорі мають бути на задньому плані */
     }
 
-    /* Анімація мерехтіння */
+    /* Анімація мерехтіння зірок */
     @keyframes twinkle {
       0%, 100% { opacity: 0.2; }
       50% { opacity: 1; }
     }
-
-    /* Контейнер для суцільної райдужної стрічки */
-    #trail-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none; /* Щоб не блокувати взаємодію з елементами під ним */
-      overflow: hidden; /* Обрізаємо стрічку, що виходить за межі екрану */
-      z-index: 9999;
-    }
-
-    /* Елементи, що формують стрічку */
-    .trail-segment {
-      position: absolute;
-      width: 15px; /* Ширина сегмента стрічки */
-      height: 15px; /* Висота сегмента стрічки */
-      border-radius: 50%; /* Робимо їх круглими */
-      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet); /* Райдужний градієнт */
-      transform: translate(-50%, -50%); /* Центруємо відносно курсора */
-      transition: opacity 0.5s linear; /* Плавне зникнення */
-      opacity: 1; /* Спочатку повністю видимі */
-      will-change: transform, opacity; /* Оптимізація анімації */
-    }
   </style>
 </head>
 <body>
+
+  <marquee style="color: blue;">вітаю на моєму сайті :3</marquee>
+
+  <canvas id="rainbowCanvas"></canvas>
+
+  <script>
+    // ----------- Скрипт для райдужної стрічки на Canvas -----------
+    const canvas = document.getElementById('rainbowCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Налаштовуємо розмір канвасу під вікно iframe
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); // Задаємо розмір при завантаженні
+
+    const trailPoints = []; // Масив для зберігання точок стрічки
+    const maxTrailLength = 50; // Довжина хвоста (кількість точок)
+    const trailSegmentThickness = 20; // Товщина стрічки
+    const rainbowColors = [
+      'rgba(255, 0, 0, 1)',   // Red
+      'rgba(255, 127, 0, 1)', // Orange
+      'rgba(255, 255, 0, 1)', // Yellow
+      'rgba(0, 255, 0, 1)',   // Green
+      'rgba(0, 0, 255, 1)',   // Blue
+      'rgba(75, 0, 130, 1)',  // Indigo
+      'rgba(148, 0, 211, 1)'  // Violet
+    ];
+
+    let mouseX = -100; // Початкова позиція поза екраном
+    let mouseY = -100;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      // Додаємо нову точку на поточну позицію курсора
+      trailPoints.push({ x: mouseX, y: mouseY });
+
+      // Обмежуємо довжину хвоста
+      if (trailPoints.length > maxTrailLength) {
+        trailPoints.shift(); // Видаляємо найстарішу точку
+      }
+    });
+
+    function drawRainbowTrail() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо канвас перед малюванням
+
+      if (trailPoints.length < 2) return; // Потрібно хоча б 2 точки для лінії
+
+      // Проходимо по точках з кінця (від курсора) до початку хвоста
+      for (let i = trailPoints.length - 1; i > 0; i--) {
+        const p1 = trailPoints[i];
+        const p2 = trailPoints[i - 1];
+
+        // Розраховуємо індекс кольору веселки. Чим ближче до початку хвоста (менший i), тим далі колір у веселки
+        const colorIndex = Math.floor((i / maxTrailLength) * rainbowColors.length);
+        const color = rainbowColors[Math.min(colorIndex, rainbowColors.length - 1)];
+
+        // Додаємо прозорість для затухання
+        const alpha = i / maxTrailLength; // Чим ближче до початку хвоста, тим менше alpha
+        ctx.strokeStyle = color.replace('1)', `${alpha})`); // Замінюємо alpha в rgba()
+
+        ctx.lineWidth = trailSegmentThickness; // Товщина лінії
+        ctx.lineCap = 'round'; // Круглі кінці ліній для плавного з'єднання
+        ctx.lineJoin = 'round'; // Плавні з'єднання сегментів
+
+        ctx.beginPath();
+        ctx.moveTo(p2.x, p2.y);
+        ctx.lineTo(p1.x, p1.y);
+        ctx.stroke();
+      }
+
+      requestAnimationFrame(drawRainbowTrail); // Продовжуємо анімацію
+    }
+
+    drawRainbowTrail(); // Запускаємо малювання
+
+    // ----------- Скрипт для мерехтливих зірок -----------
+    const starCount = 150; // Кількість зірок
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      const size = Math.random() * 2 + 1; // Розмір зірки 1-3px
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.top = Math.random() * window.innerHeight + 'px';
+      star.style.left = Math.random() * window.innerWidth + 'px';
+
+      // Рандомна тривалість та затримка мерехтіння
+      star.style.animationDuration = (Math.random() * 3 + 2) + 's'; /* 2-5 секунд */
+      star.style.animationDelay = (Math.random() * 5) + 's'; /* 0-5 секунд затримки */
+
+      document.body.appendChild(star);
+    }
+  </script>
+
+</body>
+</html>
 
   <marquee style="color: blue;">вітаю на моєму сайті :3</marquee>
 
