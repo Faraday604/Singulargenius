@@ -1,6 +1,133 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Про мене - ретро сітка</title>
+  <style>
+    /* Фон: чорний з зеленою сіткою */
+    body {
+      margin: 0;
+      background-color: #000;
+      background-image:
+        linear-gradient(#0f0 1px, transparent 1px),
+        linear-gradient(90deg, #0f0 1px, transparent 1px);
+      background-size: 40px 40px;
+      color: #0f0;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      color: #0f0;
+      text-shadow: 0 0 5px #0f0;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      max-width: 960px;
+      width: 100%;
+      background-color: rgba(0, 30, 0, 0.8);
+      border: 2px solid #0f0;
+      padding: 20px;
+      box-sizing: border-box;
+      box-shadow: 0 0 10px #0f0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .box {
+      border: 1px solid #0f0;
+      padding: 15px;
+      box-shadow: inset 0 0 5px #0f0;
+      background-color: rgba(0, 50, 0, 0.7);
+    }
+
+    a {
+      color: #0f0;
+      text-decoration: none;
+      border-bottom: 1px dotted #0f0;
+      transition: color 0.2s;
+    }
+    a:hover {
+      color: #afa;
+      border-bottom-style: solid;
+      text-shadow: 0 0 10px #afa;
+    }
+
+    /* Ретро-ефекти */
+    .terminal-text {
+      white-space: pre-wrap;
+      font-size: 1.1em;
+      line-height: 1.4;
+      letter-spacing: 0.05em;
+    }
+
+    /* Нижній футер */
+    footer {
+      margin-top: 30px;
+      font-size: 0.8em;
+      color: #070;
+      text-shadow: 0 0 2px #0f0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Про мене</h1>
+
+  <div class="container">
+    <section class="box">
+      <h2>Інформація</h2>
+      <p class="terminal-text">
+Привіт! Я [Твоє ім'я] — фанат ретро-стилю, кодування та всього, що пов'язано з класичним інтернетом. Тут збираю свої думки, посилання та цікаві штуки.
+      </p>
+    </section>
+
+    <section class="box">
+      <h2>Корисні посилання</h2>
+      <ul>
+        <li><a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        <li><a href="mailto:your.email@example.com">Email</a></li>
+        <li><a href="https://example.com/blog" target="_blank" rel="noopener noreferrer">Мій блог</a></li>
+      </ul>
+    </section>
+
+    <section class="box">
+      <h2>Проекти</h2>
+      <p class="terminal-text">
+- Ретро-сайт із ефектами<br />
+- Гостьова книга на Google Sheets<br />
+- Мікро-ігри в стилі Web 1.0<br />
+      </p>
+    </section>
+
+    <section class="box">
+      <h2>Контакти</h2>
+      <p class="terminal-text">
+Telegram: @yourtelegram<br />
+Discord: yourdiscord#1234<br />
+Twitter: @yourtwitter
+      </p>
+    </section>
+  </div>
+
+  <footer>
+    © 2025 Ретро-сторінка | Зроблено з любов'ю та HTML
+  </footer>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
   <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
   <script>
     window.addEventListener("load", () => {
