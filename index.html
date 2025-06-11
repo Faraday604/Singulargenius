@@ -1,40 +1,45 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <title>Райдужна Стрічка на Canvas + мерехтливі зорі</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Райдужна Стрічка + Мерехтливі Зорі</title>
   <style>
-    /* Темний фон - тепер він буде задаватися всередині iframe */
+    /* Стилі для всього тіла сторінки */
     body {
       margin: 0;
-      height: 100vh; /* Забезпечуємо повну висоту */
-      background: #000008; /* Майже чорний, для ефекту космосу */
+      min-height: 100vh; /* Забезпечуємо, що body займає всю висоту вікна */
+      background: #000008; /* Темно-синій, майже чорний фон */
       overflow: hidden; /* Приховуємо скролбари */
-      cursor: crosshair; /* Курсор прицілу, дуже ретро */
-      position: relative; /* Для позиціонування зірок та канвасу */
+      cursor: crosshair; /* Ретро-курсор прицілу */
+      position: relative; /* Для позиціонування канвасу та зірок */
+      display: flex; /* Для централізації marquee, якщо захочеш */
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
 
-    /* Канвас для райдужної стрічки */
-    #rainbowCanvas {
-      position: absolute; /* Абсолютне позиціонування всередині body */
+    /* Стилі для канвасу, на якому малюється стрічка */
+    #rainbowTrailCanvas {
+      position: fixed; /* Фіксоване позиціонування відносно вікна */
       top: 0;
       left: 0;
       display: block; /* Прибираємо зайві відступи */
-      pointer-events: none; /* Канвас не повинен блокувати кліки під ним */
-      z-index: 10000; /* Переконаємося, що стрічка поверх інших елементів */
+      pointer-events: none; /* Канвас не блокує кліки на елементах під ним */
+      z-index: 9999; /* Переконаємося, що стрічка поверх більшості елементів */
     }
 
-    /* Зорі — маленькі біленькі крапки, які мерехтять */
+    /* Стилі для мерехтливих зірок */
     .star {
-      position: fixed; /* Fixed position відносно вікна iframe */
+      position: fixed; /* Фіксоване позиціонування відносно вікна */
       background: white;
       border-radius: 50%;
       opacity: 0.8;
-      pointer-events: none; /* Щоб зірки не блокували взаємодію з елементами */
+      pointer-events: none; /* Зірки не блокують взаємодію */
       animation-name: twinkle;
       animation-iteration-count: infinite;
       animation-timing-function: ease-in-out;
-      z-index: 0; /* Зорі мають бути на задньому плані */
+      z-index: 0; /* Зорі на задньому плані */
     }
 
     /* Анімація мерехтіння зірок */
@@ -42,89 +47,111 @@
       0%, 100% { opacity: 0.2; }
       50% { opacity: 1; }
     }
+
+    /* Стилі для ретро-тексту */
+    marquee {
+      color: #00FFFF; /* Блакитний текст */
+      font-family: 'Courier New', Courier, monospace; /* Ретро-шрифт */
+      font-size: 1.2em;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.7); /* Невелике світіння */
+      z-index: 1000; /* Marquee має бути видимим */
+      position: relative; /* Щоб його було видно над зірками */
+      padding: 10px 0;
+    }
+
   </style>
 </head>
 <body>
 
-  <marquee style="color: blue;">вітаю на моєму сайті :3</marquee>
+  <marquee behavior="scroll" direction="left" scrollamount="4">
+   Привіт o_O
+  </marquee>
 
-  <canvas id="rainbowCanvas"></canvas>
+  <canvas id="rainbowTrailCanvas"></canvas>
 
   <script>
-    // ----------- Скрипт для райдужної стрічки на Canvas -----------
-    const canvas = document.getElementById('rainbowCanvas');
+    // --- Скрипт для райдужної стрічки ---
+    const canvas = document.getElementById('rainbowTrailCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Налаштовуємо розмір канвасу під вікно iframe
+    // Функція для встановлення розмірів канвасу під вікно
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas(); // Задаємо розмір при завантаженні
+    window.addEventListener('resize', resizeCanvas); // Переналаштовуємо розмір при зміні вікна
+    resizeCanvas(); // Встановлюємо розмір при завантаженні
 
-    const trailPoints = []; // Масив для зберігання точок стрічки
-    const maxTrailLength = 50; // Довжина хвоста (кількість точок)
-    const trailSegmentThickness = 20; // Товщина стрічки
+    const trailPoints = []; // Масив для зберігання точок, з яких складається стрічка
+    const maxTrailLength = 40; // Кількість точок у хвості (довжина хвоста)
+    const segmentDrawDelay = 10; // Затримка між додаванням нових точок (в мс)
+    const trailThickness = 18; // Товщина стрічки
     const rainbowColors = [
-      'rgba(255, 0, 0, 1)',   // Red
-      'rgba(255, 127, 0, 1)', // Orange
-      'rgba(255, 255, 0, 1)', // Yellow
-      'rgba(0, 255, 0, 1)',   // Green
-      'rgba(0, 0, 255, 1)',   // Blue
-      'rgba(75, 0, 130, 1)',  // Indigo
-      'rgba(148, 0, 211, 1)'  // Violet
+      'rgba(255, 0, 0, 1)',   // Червоний
+      'rgba(255, 127, 0, 1)', // Помаранчевий
+      'rgba(255, 255, 0, 1)', // Жовтий
+      'rgba(0, 255, 0, 1)',   // Зелений
+      'rgba(0, 0, 255, 1)',   // Синій
+      'rgba(75, 0, 130, 1)',  // Індиго
+      'rgba(148, 0, 211, 1)'  // Фіолетовий
     ];
 
-    let mouseX = -100; // Початкова позиція поза екраном
+    let mouseX = -100; // Початкова позиція (за межами екрану)
     let mouseY = -100;
+    let lastPointTime = 0; // Час останнього додавання точки
 
     document.addEventListener('mousemove', e => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      // Додаємо нову точку на поточну позицію курсора
-      trailPoints.push({ x: mouseX, y: mouseY });
 
-      // Обмежуємо довжину хвоста
-      if (trailPoints.length > maxTrailLength) {
-        trailPoints.shift(); // Видаляємо найстарішу точку
+      const currentTime = performance.now(); // Використовуємо performance.now() для точнішого часу
+      if (currentTime - lastPointTime > segmentDrawDelay) {
+        trailPoints.push({ x: mouseX, y: mouseY, time: currentTime }); // Додаємо точку з часом
+        if (trailPoints.length > maxTrailLength) {
+          trailPoints.shift(); // Видаляємо найстарішу точку, щоб обмежити довжину
+        }
+        lastPointTime = currentTime;
       }
     });
 
     function drawRainbowTrail() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо канвас перед малюванням
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо канвас перед кожним кадром
 
-      if (trailPoints.length < 2) return; // Потрібно хоча б 2 точки для лінії
+      if (trailPoints.length < 2) {
+        requestAnimationFrame(drawRainbowTrail);
+        return;
+      }
 
-      // Проходимо по точках з кінця (від курсора) до початку хвоста
-      for (let i = trailPoints.length - 1; i > 0; i--) {
+      // Малюємо стрічку
+      for (let i = 0; i < trailPoints.length - 1; i++) {
         const p1 = trailPoints[i];
-        const p2 = trailPoints[i - 1];
+        const p2 = trailPoints[i + 1];
 
-        // Розраховуємо індекс кольору веселки. Чим ближче до початку хвоста (менший i), тим далі колір у веселки
-        const colorIndex = Math.floor((i / maxTrailLength) * rainbowColors.length);
-        const color = rainbowColors[Math.min(colorIndex, rainbowColors.length - 1)];
+        // Розраховуємо індекс кольору веселки. Чим ближче до голови хвоста (більший i), тим далі колір у веселки
+        const colorProgress = i / (maxTrailLength - 1); // Прогрес від 0 до 1
+        const colorIndex = Math.floor(colorProgress * rainbowColors.length);
+        const baseColor = rainbowColors[Math.min(colorIndex, rainbowColors.length - 1)];
 
-        // Додаємо прозорість для затухання
-        const alpha = i / maxTrailLength; // Чим ближче до початку хвоста, тим менше alpha
-        ctx.strokeStyle = color.replace('1)', `${alpha})`); // Замінюємо alpha в rgba()
+        // Розраховуємо прозорість для затухання. Чим ближче до початку хвоста (менший i), тим прозоріше
+        const alpha = i / (maxTrailLength - 1); // Alpha від 0 (повністю прозорий) до 1 (повністю видимий)
 
-        ctx.lineWidth = trailSegmentThickness; // Товщина лінії
+        ctx.strokeStyle = baseColor.replace('1)', `${alpha})`); // Застосовуємо прозорість до кольору
+        ctx.lineWidth = trailThickness; // Товщина стрічки
         ctx.lineCap = 'round'; // Круглі кінці ліній для плавного з'єднання
         ctx.lineJoin = 'round'; // Плавні з'єднання сегментів
 
         ctx.beginPath();
-        ctx.moveTo(p2.x, p2.y);
-        ctx.lineTo(p1.x, p1.y);
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
         ctx.stroke();
       }
 
       requestAnimationFrame(drawRainbowTrail); // Продовжуємо анімацію
     }
 
-    drawRainbowTrail(); // Запускаємо малювання
+    drawRainbowTrail(); // Запускаємо малювання стрічки
 
-    // ----------- Скрипт для мерехтливих зірок -----------
+    // --- Скрипт для мерехтливих зірок ---
     const starCount = 150; // Кількість зірок
     for (let i = 0; i < starCount; i++) {
       const star = document.createElement('div');
@@ -136,12 +163,15 @@
       star.style.left = Math.random() * window.innerWidth + 'px';
 
       // Рандомна тривалість та затримка мерехтіння
-      star.style.animationDuration = (Math.random() * 3 + 2) + 's'; /* 2-5 секунд */
-      star.style.animationDelay = (Math.random() * 5) + 's'; /* 0-5 секунд затримки */
+      star.style.animationDuration = (Math.random() * 3 + 2) + 's'; // 2-5 секунд
+      star.style.animationDelay = (Math.random() * 5) + 's'; // 0-5 секунд затримки
 
       document.body.appendChild(star);
     }
   </script>
+
+</body>
+</html>
 
 </body>
 </html>
