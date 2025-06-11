@@ -8,9 +8,9 @@
     body {
       margin: 0;
       height: 100vh;
-      background: #000008;
+      background: #000008; /* Майже чорний, для ефекту космосу */
       overflow: hidden;
-      cursor: crosshair;
+      cursor: crosshair; /* Курсор прицілу, дуже ретро */
       position: relative;
     }
 
@@ -20,10 +20,11 @@
       background: white;
       border-radius: 50%;
       opacity: 0.8;
-      pointer-events: none;
+      pointer-events: none; /* Щоб зірки не блокували взаємодію з елементами */
       animation-name: twinkle;
       animation-iteration-count: infinite;
       animation-timing-function: ease-in-out;
+      z-index: 0; /* Зорі мають бути на задньому плані */
     }
 
     /* Анімація мерехтіння */
@@ -32,21 +33,30 @@
       50% { opacity: 1; }
     }
 
-    /* Контейнер для хвоста (щоб можна було позиціювати) */
-    #trail {
+    /* Елементи хвоста - маленькі райдужні краплі */
+    .rainbow-dot {
       position: fixed;
-      top: 0;
-      left: 0;
+      width: 15px; /* Розмір окремої "краплі" хвоста */
+      height: 15px;
+      border-radius: 50%;
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet); /* Райдужний градієнт */
+      opacity: 0; /* Починаємо з прозорого */
       pointer-events: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 20px;
-      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-      filter: drop-shadow(0 0 5px rgba(255 255 255, 0.6));
-      mix-blend-mode: screen; /* Крутий ефект накладення */
-      transform: translate(-50%, -50%);
-      transition: top 0.1s ease-out, left 0.1s ease-out;
-      z-index: 9999;
+      transform: translate(-50%, -50%) scale(0); /* Починаємо з центру і зменшеного */
+      animation: fadeOutAndShrink 1s forwards ease-out; /* Анімація зникнення */
+      z-index: 10000; /* Переконаємось, що хвіст видно поверх інших елементів */
+    }
+
+    /* Анімація зникнення та зменшення для елементів хвоста */
+    @keyframes fadeOutAndShrink {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0);
+      }
     }
   </style>
 </head>
@@ -54,48 +64,36 @@
 
   <marquee style="color: blue;">вітаю на моєму сайті :3</marquee>
 
-  <div id="trail"></div>
-
   <script>
-    const trail = document.getElementById('trail');
-
-    // Функція плавного слідування (плавний рух стрічки)
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let trailX = mouseX;
-    let trailY = mouseY;
-
+    // ----------- Скрипт для райдужного хвоста -----------
     document.addEventListener('mousemove', e => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+      const dot = document.createElement('div');
+      dot.classList.add('rainbow-dot');
+      dot.style.left = e.clientX + 'px';
+      dot.style.top = e.clientY + 'px';
+
+      document.body.appendChild(dot);
+
+      // Видаляємо елемент хвоста після завершення анімації, щоб не перевантажувати DOM
+      dot.addEventListener('animationend', () => {
+        dot.remove();
+      });
     });
 
-    function animate() {
-      // Плавне наближення до позиції курсора
-      trailX += (mouseX - trailX) * 0.15;
-      trailY += (mouseY - trailY) * 0.15;
-
-      trail.style.left = trailX + 'px';
-      trail.style.top = trailY + 'px';
-
-      requestAnimationFrame(animate);
-    }
-    animate();
-
-    // Створюємо зірки випадково на сторінці
-    const starCount = 150;
+    // ----------- Скрипт для мерехтливих зірок -----------
+    const starCount = 150; // Кількість зірок
     for (let i = 0; i < starCount; i++) {
       const star = document.createElement('div');
       star.classList.add('star');
-      const size = Math.random() * 2 + 1; // 1-3px
+      const size = Math.random() * 2 + 1; // Розмір зірки 1-3px
       star.style.width = size + 'px';
       star.style.height = size + 'px';
       star.style.top = Math.random() * window.innerHeight + 'px';
       star.style.left = Math.random() * window.innerWidth + 'px';
 
       // Рандомна тривалість та затримка мерехтіння
-      star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      star.style.animationDelay = (Math.random() * 5) + 's';
+      star.style.animationDuration = (Math.random() * 3 + 2) + 's'; /* 2-5 секунд */
+      star.style.animationDelay = (Math.random() * 5) + 's'; /* 0-5 секунд затримки */
 
       document.body.appendChild(star);
     }
@@ -103,7 +101,6 @@
 
 </body>
 </html>
-
 
 <!DOCTYPE html>
 <html>
