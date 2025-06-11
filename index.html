@@ -258,11 +258,18 @@
     clickCount++;
     clickCountElement.textContent = clickCount;
 
-    if (clickCount >= 10) {
+    // Показувати повідомлення тільки після 33 кліків
+    if (clickCount >= 33) {
       secretMessage.style.display = 'block';
+    } else {
+      secretMessage.style.display = 'none';
     }
+
+    // Показувати картинку після 20 кліків (як було)
     if (clickCount >= 20) {
       secretImage.style.display = 'block';
+    } else {
+      secretImage.style.display = 'none';
     }
   }
 </script>
