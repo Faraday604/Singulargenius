@@ -1,313 +1,234 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>33</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Райдужна Стрічка + Мерехтливі Зорі + Секрет</title>
   <style>
-    /* Стилі для всього тіла сторінки */
     body {
       margin: 0;
-      min-height: 100vh; /* Забезпечуємо, що body займає всю висоту вікна */
-      background: #000008; /* Темно-синій, майже чорний фон */
-      overflow: hidden; /* Приховуємо скролбари */
-      cursor: crosshair; /* Ретро-курсор прицілу */
-      position: relative; /* Для позиціонування канвасу та зірок */
-      display: flex; /* Для централізації вмісту */
-      justify-content: center; /* Центрування по горизонталі */
-      align-items: center; /* Центрування по вертикалі */
-      flex-direction: column; /* Елементи один під одним */
-      font-family: 'Courier New', Courier, monospace; /* Загальний ретро-шрифт для всього body */
-      color: white; /* Дефолтний колір тексту */
+      min-height: 100vh;
+      background: #000008;
+      overflow: hidden;
+      cursor: crosshair;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: Arial, sans-serif;
     }
-
-    /* Стилі для канвасу, на якому малюється стрічка */
     #rainbowTrailCanvas {
-      position: fixed; /* Фіксоване позиціонування відносно вікна */
-      top: 0;
-      left: 0;
-      display: block; /* Прибираємо зайві відступи */
-      pointer-events: none; /* Канвас не блокує кліки на елементах під ним */
-      z-index: 9999; /* Переконаємося, що стрічка поверх більшості елементів */
+      position: fixed;
+      top: 0; left: 0;
+      display: block;
+      pointer-events: none;
+      z-index: 9999;
     }
-
-    /* Стилі для мерехтливих зірок */
     .star {
-      position: fixed; /* Фіксоване позиціонування відносно вікна */
+      position: fixed;
       background: white;
       border-radius: 50%;
       opacity: 0.8;
-      pointer-events: none; /* Зірки не блокують взаємодію */
+      pointer-events: none;
       animation-name: twinkle;
       animation-iteration-count: infinite;
       animation-timing-function: ease-in-out;
-      z-index: 0; /* Зорі на задньому плані */
+      z-index: 0;
     }
-
-    /* Анімація мерехтіння зірок */
     @keyframes twinkle {
       0%, 100% { opacity: 0.2; }
       50% { opacity: 1; }
     }
-
-    /* Стилі для ретро-тексту Marquee */
     marquee {
-      color: #00FFFF; /* Блакитний текст */
-      font-family: 'Courier New', Courier, monospace; /* Ретро-шрифт */
+      color: #00FFFF;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 1.2em;
-      text-shadow: 0 0 5px rgba(0, 255, 255, 0.7); /* Невелике світіння */
-      z-index: 1000; /* Marquee має бути видимим */
-      position: relative; /* Щоб його було видно над зірками */
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+      z-index: 1000;
+      position: relative;
       padding: 10px 0;
-      width: 100%; /* Займає всю ширину */
-      text-align: center; /* Центруємо текст в marquee */
+      width: 100%;
+      background: black;
     }
-
-    /* Стилі для кнопки "натисни!" та лічильника */
+    /* Секція кнопок і секрету */
     #click-button {
       padding: 10px 20px;
       font-size: 24px;
       cursor: pointer;
       color: white;
-      background-color: #800080; /* Фіолетовий */
-      border: 3px solid #4B0082; /* Темніший фіолетовий */
+      background-color: #800080;
+      border: 3px solid #4B0082;
       border-radius: 5px;
       text-transform: uppercase;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       transition: transform 0.2s, box-shadow 0.2s;
       margin-right: 15px;
-      position: relative; /* Щоб було видно над канвасом */
-      z-index: 1001;
     }
     #click-button:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
     }
     #click-count {
-      color: white;
       font-size: 24px;
       margin-left: 10px;
-      position: relative; /* Щоб було видно над канвасом */
-      z-index: 1001;
+      vertical-align: middle;
     }
-
-    /* Стилі для кнопки "Перейти на другу сторінку" */
+    #secret-message {
+      display: none;
+      color: yellow;
+      font-size: 24px;
+      margin-top: 20px;
+    }
+    #secret-image {
+      display: none;
+      margin-top: 20px;
+      width: 300px;
+      height: auto;
+      border: 2px solid yellow;
+      border-radius: 8px;
+    }
     #go-second-page {
       padding: 10px 20px;
       font-size: 24px;
       cursor: pointer;
-      color: #800080; /* Фіолетовий текст */
+      color: #800080;
       background-color: white;
       border: 3px solid #800080;
       border-radius: 5px;
       text-transform: uppercase;
       box-shadow: 0 4px 8px rgba(128, 0, 128, 0.3);
       transition: transform 0.2s, box-shadow 0.2s;
-      position: relative; /* Щоб було видно над канвасом */
-      z-index: 1001;
+      margin-top: 20px;
     }
     #go-second-page:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 12px rgba(128, 0, 128, 0.4);
     }
-    .button-container {
-      margin-top: 20px;
-      position: relative;
-      z-index: 1001;
-    }
-
-    /* Стилі для секретного повідомлення та зображення */
-    #secret-message {
-      display: none; /* За замовчуванням приховано */
-      color: yellow;
-      font-size: 24px;
-      margin-top: 20px;
-      text-align: center;
-      position: relative; /* Щоб було видно над канвасом */
-      z-index: 1001;
-    }
-    #secret-image {
-      display: none; /* За замовчуванням приховано */
-      margin-top: 20px;
-      width: 300px;
-      height: auto;
-      border: 5px solid yellow; /* Рамка для ретро-картинки */
-      box-shadow: 0 0 15px rgba(255, 255, 0, 0.7); /* Світіння для ретро-картинки */
-      position: relative; /* Щоб було видно над канвасом */
-      z-index: 1001;
-    }
   </style>
 </head>
 <body>
-
   <marquee behavior="scroll" direction="left" scrollamount="4">
     Привіт o_O
   </marquee>
 
   <canvas id="rainbowTrailCanvas"></canvas>
 
-  <div>
+  <div style="margin-top: 100px;">
     <button id="click-button" onclick="incrementCounter()">натисни!</button>
     <span id="click-count">0</span>
   </div>
 
-  <div class="button-container">
-    <button id="go-second-page" onclick="location.href='genius.html'">Перейти на другу сторінку</button>
-  </div>
+  <button id="go-second-page" onclick="location.href='genius.html'">Перейти на другу сторінку</button>
 
   <div id="secret-message">фрізер прийде..</div>
-  <img id="secret-image" src="https://i.imgur.com/RV7jCyY.png" alt="Secret Image">
+  <img id="secret-image" src="https://i.imgur.com/RV7jCyY.png" alt="Secret Image" />
 
-  <audio id="reveal-sound">
-    <source src="https://www.dropbox.com/scl/fi/0o27mnz2bswno97bv3hek/Creepy-Bell-Sound-Effect.mp3?rlkey=n7c19xm7u6iz7p0e3xzhttl70&st=nf2c2p71&dl=1" type="audio/mpeg">
-    Ваш браузер не підтримує аудіо елемент.
-  </audio>
+  <audio id="reveal-sound" src="https://www.dropbox.com/scl/fi/0o27mnz2bswno97bv3hek/Creepy-Bell-Sound-Effect.mp3?rlkey=n7c19xm7u6iz7p0e3xzhttl70&st=nf2c2p71&dl=1" preload="auto"></audio>
 
   <script>
-    // --- JavaScript для кнопки-лічильника та секретного повідомлення ---
-    let count = 0;
-    function incrementCounter() {
-      count++;
-      document.getElementById('click-count').textContent = count;
-      if (count === 33) {
-        document.getElementById('secret-message').style.display = 'block';
-        document.getElementById('secret-image').style.display = 'block';
-        document.getElementById('reveal-sound').play();
-      } else if (count > 33) {
-        document.getElementById('secret-message').style.display = 'none';
-        document.getElementById('secret-image').style.display = 'none';
-      }
-    }
-
-    // --- Скрипт для райдужної стрічки (Canvas) ---
+    // --- Райдужна стрічка ---
     const canvas = document.getElementById('rainbowTrailCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Функція для встановлення розмірів канвасу під вікно
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resizeCanvas); // Переналаштовуємо розмір при зміні вікна
-    resizeCanvas(); // Встановлюємо розмір при завантаженні
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-    const trailPoints = []; // Масив для зберігання точок, з яких складається стрічка
-    const maxTrailLength = 40; // Кількість точок у хвості (довжина хвоста)
-    const trailThickness = 18; // Товщина стрічки
-    const trailSmoothness = 0.15; // Наскільки плавно хвіст слідує (менше = плавніший)
-
+    const trailPoints = [];
+    const maxTrailLength = 40;
+    const segmentDrawDelay = 10;
+    const trailThickness = 18;
     const rainbowColors = [
-      '#FF0000',   // Червоний
-      '#FFA500',   // Помаранчевий
-      '#FFFF00',   // Жовтий
-      '#008000',   // Зелений
-      '#0000FF',   // Синій
-      '#4B0082',   // Індиго
-      '#EE82EE'    // Фіолетовий
+      'rgba(255, 0, 0, 1)', 'rgba(255, 127, 0, 1)', 'rgba(255, 255, 0, 1)',
+      'rgba(0, 255, 0, 1)', 'rgba(0, 0, 255, 1)', 'rgba(75, 0, 130, 1)',
+      'rgba(148, 0, 211, 1)'
     ];
 
-    let mouseX = -100; // Початкова позиція (за межами екрану)
-    let mouseY = -100;
-
-    // Допоміжна функція для інтерполяції (змішування) двох кольорів
-    function interpolateColors(color1Hex, color2Hex, factor) {
-      const hexToRgb = (hex) => ({
-        r: parseInt(hex.substring(1, 3), 16),
-        g: parseInt(hex.substring(3, 5), 16),
-        b: parseInt(hex.substring(5, 7), 16),
-      });
-
-      const rgb1 = hexToRgb(color1Hex);
-      const rgb2 = hexToRgb(color2Hex);
-
-      const r = Math.round(rgb1.r + (rgb2.r - rgb1.r) * factor);
-      const g = Math.round(rgb1.g + (rgb2.g - rgb1.g) * factor);
-      const b = Math.round(rgb1.b + (rgb2.b - rgb1.b) * factor);
-
-      return `rgb(${r}, ${g}, ${b})`;
-    }
+    let mouseX = -100, mouseY = -100;
+    let lastPointTime = 0;
 
     document.addEventListener('mousemove', e => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-
-      // Якщо хвіст ще не ініціалізовано, заповнюємо його початковими точками
-      if (trailPoints.length === 0) {
-        for (let i = 0; i < maxTrailLength; i++) {
-          trailPoints.push({ x: mouseX, y: mouseY });
+      const currentTime = performance.now();
+      if (currentTime - lastPointTime > segmentDrawDelay) {
+        trailPoints.push({ x: mouseX, y: mouseY, time: currentTime });
+        if (trailPoints.length > maxTrailLength) {
+          trailPoints.shift();
         }
-      }
-      
-      // Додаємо нову точку на поточну позицію курсора на початок масиву
-      // і видаляємо найстарішу точку з кінця масиву, щоб підтримувати довжину хвоста
-      trailPoints.unshift({ x: mouseX, y: mouseY });
-      if (trailPoints.length > maxTrailLength) {
-        trailPoints.pop();
+        lastPointTime = currentTime;
       }
     });
 
     function drawRainbowTrail() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо канвас перед кожним кадром
-
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (trailPoints.length < 2) {
         requestAnimationFrame(drawRainbowTrail);
         return;
       }
-
-      // Малюємо стрічку
-      ctx.lineCap = 'round'; // Круглі кінці лінії
-      ctx.lineJoin = 'round'; // Плавні з'єднання сегментів
-      ctx.lineWidth = trailThickness;
-
       for (let i = 0; i < trailPoints.length - 1; i++) {
         const p1 = trailPoints[i];
         const p2 = trailPoints[i + 1];
-
-        // Розрахунок кольору: чим ближче до голови хвоста (менший 'i'), тим "новіший" колір веселки
-        const colorProgress = i / (maxTrailLength - 1); // Прогрес від 0 до 1 по довжині хвоста
-        const colorIndex = Math.floor(colorProgress * (rainbowColors.length - 1));
-        const startColor = rainbowColors[colorIndex];
-        const endColor = rainbowColors[Math.min(colorIndex + 1, rainbowColors.length - 1)];
-        const interpolationFactor = (colorProgress * (rainbowColors.length - 1)) - colorIndex;
-
-        const segmentColor = interpolateColors(startColor, endColor, interpolationFactor);
-
-        // Розрахунок прозорості: чим далі від голови хвоста (більший 'i'), тим прозоріше
-        // Змінив логіку, щоб затухання було від початку хвоста до його кінця
-        const opacity = Math.pow((maxTrailLength - 1 - i) / (maxTrailLength - 1), 1.5); // Ефект затухання до кінця хвоста
-
-        ctx.strokeStyle = `${segmentColor.replace('rgb', 'rgba').replace(')', `, ${opacity.toFixed(2)})`}`; // Форматуємо alpha для точності
-
+        const colorProgress = i / (maxTrailLength - 1);
+        const colorIndex = Math.floor(colorProgress * rainbowColors.length);
+        const baseColor = rainbowColors[Math.min(colorIndex, rainbowColors.length - 1)];
+        const alpha = i / (maxTrailLength - 1);
+        ctx.strokeStyle = baseColor.replace('1)', `${alpha})`);
+        ctx.lineWidth = trailThickness;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
         ctx.stroke();
       }
-
-      requestAnimationFrame(drawRainbowTrail); // Продовжуємо анімацію
+      requestAnimationFrame(drawRainbowTrail);
     }
+    drawRainbowTrail();
 
-    drawRainbowTrail(); // Запускаємо малювання стрічки
-
-    // --- Скрипт для мерехтливих зірок ---
-    const starCount = 150; // Кількість зірок
-    for (let i = 0; i < starCount; i++) {
+    // --- Мерехтливі Зорі ---
+    function createStar() {
       const star = document.createElement('div');
       star.classList.add('star');
-      const size = Math.random() * 2 + 1; // Розмір зірки 1-3px
+      const size = Math.random() * 3 + 1; // від 1 до 4px
       star.style.width = size + 'px';
       star.style.height = size + 'px';
-      star.style.top = Math.random() * window.innerHeight + 'px';
       star.style.left = Math.random() * window.innerWidth + 'px';
-
-      // Рандомна тривалість та затримка мерехтіння
-      star.style.animationDuration = (Math.random() * 3 + 2) + 's'; /* 2-5 секунд */
-      star.style.animationDelay = (Math.random() * 5) + 's'; /* 0-5 секунд затримки */
-
+      star.style.top = Math.random() * window.innerHeight + 'px';
+      star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      star.style.animationDelay = (Math.random() * 5) + 's';
       document.body.appendChild(star);
+      return star;
+    }
+    const starsCount = 80;
+    for (let i = 0; i < starsCount; i++) {
+      createStar();
+    }
+
+    // --- Лічильник кліків і секрет ---
+    let clickCounter = 0;
+    const secretThreshold = 33;
+    const clickCountEl = document.getElementById('click-count');
+    const secretMsgEl = document.getElementById('secret-message');
+    const secretImgEl = document.getElementById('secret-image');
+    const revealSound = document.getElementById('reveal-sound');
+
+    function incrementCounter() {
+      clickCounter++;
+      clickCountEl.textContent = clickCounter;
+      if (clickCounter === secretThreshold) {
+        secretMsgEl.style.display = 'block';
+        secretImgEl.style.display = 'block';
+        revealSound.play();
+      }
     }
   </script>
-
 </body>
 </html>
+
 
