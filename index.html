@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  
- <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
-<script>
-  window.addEventListener("load", () => {
-    new cursoreffects.rainbowCursor();
-  });
-</script>
-  
+  <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
+  <script>
+    window.addEventListener("load", () => {
+      new cursoreffects.rainbowCursor();
+    });
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ретро-сайт</title>
@@ -18,12 +17,18 @@
       min-height: 100vh;
       background: #000000;
       overflow: hidden;
-      cursor: crosshair;
+      cursor: url('https://i.imgur.com/Bgwzmcz.png') 0 0, auto;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       font-family: Arial, sans-serif;
+    }
+
+    button,
+    #click-button,
+    #go-second-page {
+      cursor: url('https://i.imgur.com/Ao3vBQU.png') 0 0, pointer;
     }
 
     .star {
@@ -56,7 +61,6 @@
     #click-button {
       padding: 10px 20px;
       font-size: 24px;
-      cursor: pointer;
       color: white;
       background-color: #800080;
       border: 3px solid #4B0082;
@@ -95,7 +99,6 @@
     #go-second-page {
       padding: 10px 20px;
       font-size: 24px;
-      cursor: pointer;
       color: #800080;
       background-color: white;
       border: 3px solid #800080;
