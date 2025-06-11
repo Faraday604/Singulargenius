@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Райдужна Стрічка + Мерехтливі Зорі + Секрет</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ретро-сайт</title>
   <style>
     body {
       margin: 0;
@@ -11,21 +11,13 @@
       background: #000008;
       overflow: hidden;
       cursor: crosshair;
-      position: relative;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      color: white;
+      flex-direction: column;
       font-family: Arial, sans-serif;
     }
-    #rainbowTrailCanvas {
-      position: fixed;
-      top: 0; left: 0;
-      display: block;
-      pointer-events: none;
-      z-index: 9999;
-    }
+
     .star {
       position: fixed;
       background: white;
@@ -37,10 +29,12 @@
       animation-timing-function: ease-in-out;
       z-index: 0;
     }
+
     @keyframes twinkle {
       0%, 100% { opacity: 0.2; }
       50% { opacity: 1; }
     }
+
     marquee {
       color: #00FFFF;
       font-family: 'Courier New', Courier, monospace;
@@ -49,10 +43,8 @@
       z-index: 1000;
       position: relative;
       padding: 10px 0;
-      width: 100%;
-      background: black;
     }
-    /* Секція кнопок і секрету */
+
     #click-button {
       padding: 10px 20px;
       font-size: 24px;
@@ -66,29 +58,32 @@
       transition: transform 0.2s, box-shadow 0.2s;
       margin-right: 15px;
     }
+
     #click-button:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
     }
+
     #click-count {
+      color: white;
       font-size: 24px;
       margin-left: 10px;
-      vertical-align: middle;
     }
+
     #secret-message {
       display: none;
       color: yellow;
       font-size: 24px;
       margin-top: 20px;
     }
+
     #secret-image {
       display: none;
       margin-top: 20px;
       width: 300px;
       height: auto;
-      border: 2px solid yellow;
-      border-radius: 8px;
     }
+
     #go-second-page {
       padding: 10px 20px;
       font-size: 24px;
@@ -100,134 +95,72 @@
       text-transform: uppercase;
       box-shadow: 0 4px 8px rgba(128, 0, 128, 0.3);
       transition: transform 0.2s, box-shadow 0.2s;
-      margin-top: 20px;
     }
+
     #go-second-page:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 12px rgba(128, 0, 128, 0.4);
     }
+
+    .button-container {
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
+
   <marquee behavior="scroll" direction="left" scrollamount="4">
-    Привіт o_O
+    Привіт o_O — вітаю на моєму сайті :3
   </marquee>
 
-  <canvas id="rainbowTrailCanvas"></canvas>
+  <audio id="reveal-sound">
+    <source src="https://www.dropbox.com/scl/fi/0o27mnz2bswno97bv3hek/Creepy-Bell-Sound-Effect.mp3?rlkey=n7c19xm7u6iz7p0e3xzhttl70&st=nf2c2p71&dl=1" type="audio/mpeg">
+  </audio>
 
-  <div style="margin-top: 100px;">
+  <div>
     <button id="click-button" onclick="incrementCounter()">натисни!</button>
     <span id="click-count">0</span>
   </div>
 
-  <button id="go-second-page" onclick="location.href='genius.html'">Перейти на другу сторінку</button>
+  <div class="button-container">
+    <button id="go-second-page" onclick="location.href='genius.html'">Перейти на другу сторінку</button>
+  </div>
 
   <div id="secret-message">фрізер прийде..</div>
-  <img id="secret-image" src="https://i.imgur.com/RV7jCyY.png" alt="Secret Image" />
-
-  <audio id="reveal-sound" src="https://www.dropbox.com/scl/fi/0o27mnz2bswno97bv3hek/Creepy-Bell-Sound-Effect.mp3?rlkey=n7c19xm7u6iz7p0e3xzhttl70&st=nf2c2p71&dl=1" preload="auto"></audio>
+  <img id="secret-image" src="https://i.imgur.com/RV7jCyY.png" alt="Secret Image">
 
   <script>
-    // --- Райдужна стрічка ---
-    const canvas = document.getElementById('rainbowTrailCanvas');
-    const ctx = canvas.getContext('2d');
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    const trailPoints = [];
-    const maxTrailLength = 40;
-    const segmentDrawDelay = 10;
-    const trailThickness = 18;
-    const rainbowColors = [
-      'rgba(255, 0, 0, 1)', 'rgba(255, 127, 0, 1)', 'rgba(255, 255, 0, 1)',
-      'rgba(0, 255, 0, 1)', 'rgba(0, 0, 255, 1)', 'rgba(75, 0, 130, 1)',
-      'rgba(148, 0, 211, 1)'
-    ];
-
-    let mouseX = -100, mouseY = -100;
-    let lastPointTime = 0;
-
-    document.addEventListener('mousemove', e => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      const currentTime = performance.now();
-      if (currentTime - lastPointTime > segmentDrawDelay) {
-        trailPoints.push({ x: mouseX, y: mouseY, time: currentTime });
-        if (trailPoints.length > maxTrailLength) {
-          trailPoints.shift();
-        }
-        lastPointTime = currentTime;
-      }
-    });
-
-    function drawRainbowTrail() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (trailPoints.length < 2) {
-        requestAnimationFrame(drawRainbowTrail);
-        return;
-      }
-      for (let i = 0; i < trailPoints.length - 1; i++) {
-        const p1 = trailPoints[i];
-        const p2 = trailPoints[i + 1];
-        const colorProgress = i / (maxTrailLength - 1);
-        const colorIndex = Math.floor(colorProgress * rainbowColors.length);
-        const baseColor = rainbowColors[Math.min(colorIndex, rainbowColors.length - 1)];
-        const alpha = i / (maxTrailLength - 1);
-        ctx.strokeStyle = baseColor.replace('1)', `${alpha})`);
-        ctx.lineWidth = trailThickness;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
-        ctx.stroke();
-      }
-      requestAnimationFrame(drawRainbowTrail);
-    }
-    drawRainbowTrail();
-
-    // --- Мерехтливі Зорі ---
-    function createStar() {
+    // Зорі
+    const starCount = 150;
+    for (let i = 0; i < starCount; i++) {
       const star = document.createElement('div');
       star.classList.add('star');
-      const size = Math.random() * 3 + 1; // від 1 до 4px
+      const size = Math.random() * 2 + 1;
       star.style.width = size + 'px';
       star.style.height = size + 'px';
-      star.style.left = Math.random() * window.innerWidth + 'px';
       star.style.top = Math.random() * window.innerHeight + 'px';
+      star.style.left = Math.random() * window.innerWidth + 'px';
       star.style.animationDuration = (Math.random() * 3 + 2) + 's';
       star.style.animationDelay = (Math.random() * 5) + 's';
       document.body.appendChild(star);
-      return star;
-    }
-    const starsCount = 80;
-    for (let i = 0; i < starsCount; i++) {
-      createStar();
     }
 
-    // --- Лічильник кліків і секрет ---
-    let clickCounter = 0;
-    const secretThreshold = 33;
-    const clickCountEl = document.getElementById('click-count');
-    const secretMsgEl = document.getElementById('secret-message');
-    const secretImgEl = document.getElementById('secret-image');
-    const revealSound = document.getElementById('reveal-sound');
-
+    // Клік-рахівник
+    let count = 0;
     function incrementCounter() {
-      clickCounter++;
-      clickCountEl.textContent = clickCounter;
-      if (clickCounter === secretThreshold) {
-        secretMsgEl.style.display = 'block';
-        secretImgEl.style.display = 'block';
-        revealSound.play();
+      count++;
+      document.getElementById('click-count').textContent = count;
+      if (count === 33) {
+        document.getElementById('secret-message').style.display = 'block';
+        document.getElementById('secret-image').style.display = 'block';
+        document.getElementById('reveal-sound').play();
+      } else if (count > 33) {
+        document.getElementById('secret-message').style.display = 'none';
+        document.getElementById('secret-image').style.display = 'none';
       }
     }
   </script>
+
 </body>
 </html>
 
