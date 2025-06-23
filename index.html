@@ -145,25 +145,27 @@
       padding: 10px 0;
     }
 
-    #click-button,
-    #go-second-page {
-      padding: 10px 20px;
-      font-size: 24px;
-      color: black;
-      background-color: #00ff00;
-      border: 3px solid #0f0;
-      border-radius: 5px;
-      text-transform: uppercase;
-      box-shadow: 0 4px 12px #00ff00aa;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: url('https://www.dropbox.com/scl/fi/b08ub8z0imt0akdhaxb4k/link.cur?rlkey=aaoj9v3grlenr0rszdm6e2ewk&raw=1'), pointer;
-    }
+   #click-button,
+#go-second-page {
+  font-family: 'Courier New', monospace;
+  background-color: black;
+  color: #00ff00;
+  border: 2px solid #00ff00;
+  font-size: 18px;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  cursor: url('https://www.dropbox.com/scl/fi/b08ub8z0imt0akdhaxb4k/link.cur?rlkey=aaoj9v3grlenr0rszdm6e2ewk&raw=1'), pointer;
+  box-shadow: none;
+  outline: none;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 0;
+}
 
-    #click-button:hover,
-    #go-second-page:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px #00ff00dd;
-    }
+#click-button:hover,
+#go-second-page:hover {
+  background-color: #00ff00;
+  color: black;
+}
 
     #click-count {
       color: white;
