@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dell Latitude</title>
+<style>
+  body, html {
+    margin: 0; padding: 0; height: 100%; 
+    font-family: Tahoma, sans-serif;
+    background: linear-gradient(135deg, #316AC5 0%, #4A8ED8 100%);
+    overflow: hidden;
+  }
+  .window {
+    background: #ECE9D8;
+    border: 2px outset #D4D0C8;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+  }
+  .title-bar {
+    background: linear-gradient(to bottom, #0997FF 0%, #0053EE 100%);
+    color: white;
+    padding: 6px 10px;
+    font-weight: bold;
+    font-size: 14px;
+    user-select: none;
+  }
+  .game-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #F0F0F0;
+    padding: 10px;
+  }
+  .scene {
+    flex: 1;
+    background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+    position: relative;
+    overflow: hidden;
+    border: 2px inset #D4D0C8;
+    border-radius: 4px;
+  }
+  .character {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 320px;
+    height: 240px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: translate(-50%, -50%);
+    transition: all 0.5s ease;
+  }
+
+  /* Ефекти */
+  .shake {
+    animation: shake 0.5s ease-in-out;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translate(-50%, -50%) translateX(-6px); }
+    20%, 40%, 60%, 80% { transform: translate(-50%, -50%) translateX(6px); }
+  }
+
+  .thermal-throttle {
+    animation: thermal 2s ease-in-out;
+  }
+  @keyframes thermal {
+    0%   { filter: none; }
+    50%  { filter: hue-rotate(30deg) brightness(1.2); }
+    100% { filter: none; }
+  }
+
+  .explode {
+    animation: explodeAnim 2s forwards;
+    position: relative;
+  }
+  .explode::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 320px;
+    height: 240px;
+    background: url('https://i.imgur.com/sud9FfF.gif') no-repeat center center;
+    background-size: contain;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 1;
+    animation: fadeOut 2s forwards;
+    z-index: 10;
+  }
+  @keyframes explodeAnim {
+    0% {
+      filter: brightness(1) saturate(1);
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+    50% {
+      filter: brightness(2) saturate(3);
+      transform: translate(-50%, -50%) scale(1.2);
+      opacity: 1;
+    }
+    100% {
+      filter: brightness(0) saturate(0);
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+    }
+  }
+  @keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  .dialog-box {
+    margin-top: 8px;
+    background: #F0F0F0;
+    border: 2px inset #D4D0C8;
+    padding: 12px;
+    min-height: 110px;
+    position: relative;
+  }
+  .speaker-name {
+    color: #0066CC;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .dialog-text {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #000;
+  }
+  .options {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .option-btn {
+    background: #D4D0C8;
+    border: 2px outset #D4D0C8;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 3px;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .option-btn:hover {
+    background: #c0bfb7;
+  }
+  .option-btn:active {
+    border-style: inset;
+  }
+  .next-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    background: #D4D0C8;
+    border: 2px outset #D4D0C8;
+    padding: 6px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 3px;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .next-btn:hover {
+    background: #c0bfb7;
+  }
+  .next-btn:active {
+    border-style: inset;
+  }
+  .status-bar {
+    background: #ECE9D8;
+    border-top: 1px solid #ACA899;
+    padding: 6px 10px;
+    font-size: 13px;
+    color: #000;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="window">
+  <div class="title-bar">Dell Latitude D620: Кіберхуйня</div>
+
+  <div class="game-area">
+    <div class="scene">
+      <div class="character" id="character"></div>
+    </div>
+
+    <div class="dialog-box">
+      <div class="speaker-name" id="speaker">...</div>
+      <div class="dialog-text" id="dialog">Натисніть Далі щоб почати...</div>
+      <div class="options" id="options"></div>
+      <button class="next-btn" id="next-btn" onclick="nextDialog()">Далі</button>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    Я Бачу Очі | Dell Latitude D620 
+  </div>
+</div>
+
+<audio id="bgm" autoplay loop></audio>
+
+<script>
+  const dialogsRaw = {
+    start: {
+      speaker: "Dell Latitude D620",
+      text: "Прів) *Жахаючі звуки кібер-франкенштейна* Моє ім'я - Dell Latitude D620. Не очікував, що ти мене знайдеш..",
+      sprite: "https://i.imgur.com/wVGx7J6.png",
+      effect: "shake",
+      bgm: "https://www.dropbox.com/scl/fi/5dbos5sahl0601xdptevg/Sneaky-Snitch-4-1.mp3?rlkey=wefa02mkhas7ftqpyua3xm9vw&st=kh2mofw3&dl=1",
+      options: [
+        { text: "Продовжити", jumpTo: "askOS" }
+      ]
+    },
+    askOS: {
+      speaker: "Dell Latitude D620",
+      text: "Виберіть операційну систему:",
+      sprite: "https://i.imgur.com/wVGx7J6.png",
+      bgm: "https://www.dropbox.com/scl/fi/5dbos5sahl0601xdptevg/Sneaky-Snitch-4-1.mp3?rlkey=wefa02mkhas7ftqpyua3xm9vw&st=kh2mofw3&dl=1",
+      options: [
+        { text: "Bimbows 10", jumpTo: "bim10" },
+        { text: "Не вмикати бідолагу..", jumpTo: "dontTurnOn" }
+      ]
+    },
+    bim10: {
+      speaker: "Bimbows 10 Boot",
+      text: "*Гучні, чудернацькі звуки електроніки минулих часів.*",
+      sprite: "https://i.imgur.com/hN20KJj.png",
+      effect: "thermal-throttle",
+      bgm: "https://www.dropbox.com/scl/fi/pats8oxm98wbtgkzjv0sh/Hitman-4.mp3?rlkey=kxw1eiv8d6fo8mbq6yeix9lk7&st=d4muw6mz&dl=1",
+      options: [
+        { text: "Продовжити", jumpTo: "combustion" }
+      ]
+    },
+    combustion: {
+      speaker: "Совість..",
+      text: "Ваш ноутбук розірвало нахуй від всіх навантажень сучасної ОС.",
+      sprite: "",
+      bgm: "https://www.dropbox.com/scl/fi/pats8oxm98wbtgkzjv0sh/Hitman-4.mp3?rlkey=kxw1eiv8d6fo8mbq6yeix9lk7&st=d4muw6mz&dl=1",
+      options: [
+        { text: "???", jumpTo: "dellexplode" }
+      ]
+    },
+    dellexplode: {
+      speaker: "Dell Latitude D620",
+      text: "Це - чиста правда. Мене розірвало нахуй.",
+      sprite: "https://i.imgur.com/hN20KJj.png",
+      effect: "explode",
+      bgm: "https://www.dropbox.com/scl/fi/pats8oxm98wbtgkzjv0sh/Hitman-4.mp3?rlkey=kxw1eiv8d6fo8mbq6yeix9lk7&st=d4muw6mz&dl=1",
+      options: [
+        { text: "Почати знову", jumpTo: "start" }
+      ]
+    },
+    dontTurnOn: {
+      speaker: "Dell Latitude D620",
+      text: "Ну і правильно, не треба мене вмикати.",
+      sprite: "https://i.imgur.com/wVGx7J6.png",
+      effect: "none",
+      bgm: "https://www.dropbox.com/scl/fi/21eellnmcyn61qpt6htco/Move-Forward-4.mp3?rlkey=7gpfi6n7jzhm6bzd4u6dvlr28&st=yvmv8nsp&dl=1"
+    },
+	mysteriousVoice: {
+      speaker: "Загадковий Голос",
+      text: "Гей, ти. Ти у апарата? Чуєш мене?",
+      sprite: "",
+      effect: "none",
+	  bgm: "https://www.dropbox.com/scl/fi/21eellnmcyn61qpt6htco/Move-Forward-4.mp3?rlkey=7gpfi6n7jzhm6bzd4u6dvlr28&st=yvmv8nsp&dl=1",
+      options: [
+        { text: "Так, я тут!", jumpTo: "flash" } 
+      ]
+    },
+	flash: {
+      speaker: "Загадкова Флешка",
+      text: "Я - Загадкова Флешка. Підключи-но мене до свого ігрового монстра, хоча б погиготим!",
+      sprite: "https://i.imgur.com/qjiSDZC.png",
+      effect: "shake",
+      bgm: "https://www.dropbox.com/scl/fi/21eellnmcyn61qpt6htco/Move-Forward-4.mp3?rlkey=7gpfi6n7jzhm6bzd4u6dvlr28&st=yvmv8nsp&dl=1",
+	  options: [
+        { text: "Втрачати немає чого..", jumpTo: "booting" },
+        { text: "Відмовляюсь!", jumpTo: "dontTurnOn" }
+      ]
+    },
+	 booting: {
+      speaker: "...",
+      text: "*Ви запихали підозрілу флешку своєму ноутбуку по саме нєбалуй.",
+      sprite: "",
+      effect: "none",
+      bgm: "https://www.dropbox.com/scl/fi/21eellnmcyn61qpt6htco/Move-Forward-4.mp3?rlkey=7gpfi6n7jzhm6bzd4u6dvlr28&st=yvmv8nsp&dl=1"
+    },
+	booting2: {
+      speaker: "Dell Latitude D620",
+      text: "Я відчуваю старий запашок на цих файлах! Не можу чекати, треба запустити хоч щось.. Вибирати тобі.",
+      sprite: "https://i.imgur.com/wVGx7J6.png",
+      effect: "none",
+      bgm: "https://www.dropbox.com/scl/fi/21eellnmcyn61qpt6htco/Move-Forward-4.mp3?rlkey=7gpfi6n7jzhm6bzd4u6dvlr28&st=yvmv8nsp&dl=1",
+	  options: [
+        { text: "Запустити [LINUX]", jumpTo: "linux" },
+        { text: "Запустити [HACKINTOSH]", jumpTo: "hackintosh" }
+	  ]
+    },
+	linux: {
+      speaker: "Dell Latitude D620",
+      text: "Ваш покірний ноутбук, з радістю почав запускати цю проклятущу операційну систему. З кожною секундою ви бачите, як древній апарат, який ви знали вже більше 15 років перетворюється на щось інше.. ",
+      sprite: "https://i.imgur.com/wVGx7J6.png",
+      effect: "shake",
+      bgm: "https://www.dropbox.com/scl/fi/21eellnmcyn61qpt6htco/Move-Forward-4.mp3?rlkey=7gpfi6n7jzhm6bzd4u6dvlr28&st=yvmv8nsp&dl=1"
+    },
+	linux2: {
+      speaker: "Dell Latitude D620",
+      text: "..через десятки хвилин пекельно-тріумфального скрежету, ваш ноутбук почав шалено гудіти.. ",
+      sprite: "https://i.imgur.com/hN20KJj.png",
+      effect: "shake",
+      bgm: ""
+    },
+	linuxENDING: {
+      speaker: "Це кінець..",
+      text: "GROBOVSHIK WINS!",
+      sprite: "https://i.imgur.com/waMYaa0.png",
+      effect: "shake",
+      bgm: "https://www.dropbox.com/scl/fi/sb29g8dwqzplw8njgojbo/Funeral-March-sound-effect.mp3?rlkey=7nkhrngl2jm135a6aef65uk8l&st=ahtjvbdb&dl=1",
+	  options: [
+        { text: "Спробувати Знову..", jumpTo: "start" },
+	  ]
+    },
+	hackintosh: {
+      speaker: "Dell Latitude D620",
+      text: "Ваш ноутбук зі зневірою в процесорі почав запускати підозрілу бут-хуйню. ",
+      sprite: "https://i.imgur.com/hN20KJj.png",
+      effect: "thermal-throttle",
+      bgm: "https://www.dropbox.com/scl/fi/m73mx7gex2i8v7fzlvu69/Wallpaper-4.mp3?rlkey=2yfy60jhggu5rjuwxybg44otg&st=55zp798y&dl=1"
+    },
+	hackintosh2: {
+      speaker: "Dell Latitude D620",
+      text: "Ви знали, на що йшли.. Для того, щоб встановити цю систему треба зробити багато незрозумілої програмістичної поєботи..",
+      sprite: "https://i.imgur.com/wVGx7J6.png",
+      effect: "shake",
+      bgm: "https://www.dropbox.com/scl/fi/m73mx7gex2i8v7fzlvu69/Wallpaper-4.mp3?rlkey=2yfy60jhggu5rjuwxybg44otg&st=55zp798y&dl=1",
+	  options: [
+        { text: "зробити багато незрозумілої програмістичної поєботи", jumpTo: "hackintosh3" },
+	  ]
+    },
+	hackintosh3: {
+      speaker: "Dell Latitude D620",
+      text: "Це було дуже складно та незрозуміло, та ваші старання принесли результат..",
+      sprite: "https://i.imgur.com/wVGx7J6.png",
+      effect: "none",
+      bgm: "https://www.dropbox.com/scl/fi/m73mx7gex2i8v7fzlvu69/Wallpaper-4.mp3?rlkey=2yfy60jhggu5rjuwxybg44otg&st=55zp798y&dl=1"
+    },
+	hackintosh4: {
+      speaker: "Dell Latitude D620",
+      text: "..Але, як то кажуть: що посієш, те вже не пожнеш.. Жодна функція вашого ноутбука не працювала. Жодна, крім дисплею.. Ви побачили дуже гарні шпалери OSX Lion, та захотіли жити.",
+      sprite: "https://i.imgur.com/wVGx7J6.png",
+      effect: "none",
+      bgm: "https://www.dropbox.com/scl/fi/m73mx7gex2i8v7fzlvu69/Wallpaper-4.mp3?rlkey=2yfy60jhggu5rjuwxybg44otg&st=55zp798y&dl=1"
+    },
+	trueending: {
+      speaker: "Це кінець!",
+      text: "true ending",
+      sprite: "https://i.imgur.com/0Zt7lmr.jpeg",
+      effect: "none",
+      bgm: "https://www.dropbox.com/scl/fi/m73mx7gex2i8v7fzlvu69/Wallpaper-4.mp3?rlkey=2yfy60jhggu5rjuwxybg44otg&st=55zp798y&dl=1"
+    },
+    finalScene: {
+      speaker: "Dell Latitude D620",
+      text: "да пішов ти нахуй",
+      sprite: "https://i.imgur.com/wVGx7J6.png",
+      effect: "none",
+      bgm: "",
+      options: [
+        { text: "Почати знову", jumpTo: "start" }
+      ]
+    },
+  };
+
+  function generateScenes(raw) {
+    const keys = Object.keys(raw);
+    return keys.map(key => {
+      const scene = raw[key];
+      const options = scene.options?.map(opt => ({
+        text: opt.text,
+        jumpTo: keys.indexOf(opt.jumpTo)
+      }));
+      return {
+        speaker: scene.speaker || "",
+        text: scene.text || "",
+        sprite: scene.sprite || "",
+        effect: scene.effect || "none",
+        bgm: scene.bgm || "",
+        options: options && options.length ? options : undefined
+      };
+    });
+  }
+
+  const scenes = generateScenes(dialogsRaw);
+
+  const character = document.getElementById('character');
+  const speaker = document.getElementById('speaker');
+  const dialog = document.getElementById('dialog');
+  const optionsContainer = document.getElementById('options');
+  const nextBtn = document.getElementById('next-btn');
+  const bgm = document.getElementById('bgm');
+
+  let currentScene = 0;
+  let currentBgmSrc = "";
+
+  function nextDialog() {
+    if (currentScene >= scenes.length) return;
+
+    const scene = scenes[currentScene];
+    speaker.textContent = scene.speaker;
+    dialog.textContent = scene.text;
+    character.style.backgroundImage = scene.sprite ? `url(${scene.sprite})` : '';
+    
+    character.className = 'character';
+
+    if (scene.effect && scene.effect !== 'none') {
+      void character.offsetWidth;
+      character.classList.add(scene.effect);
+      
+      if(scene.effect === 'explode') {
+        nextBtn.disabled = true;
+        setTimeout(() => {
+          nextBtn.disabled = false;
+        }, 2000);
+      }
+    }
+
+    optionsContainer.innerHTML = '';
+
+    if (scene.bgm) {
+      if (currentBgmSrc !== scene.bgm) {
+        bgm.src = scene.bgm;
+        bgm.play().catch(() => {});
+        currentBgmSrc = scene.bgm;
+      }
+    } else {
+      bgm.pause();
+      bgm.src = "";
+      currentBgmSrc = "";
+    }
+
+    if (scene.options) {
+      nextBtn.style.display = 'none';
+
+      scene.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt.text;
+        btn.onclick = () => {
+          currentScene = opt.jumpTo;
+          nextBtn.style.display = 'block';
+          optionsContainer.innerHTML = '';
+          nextDialog();
+        };
+        optionsContainer.appendChild(btn);
+      });
+    } else {
+      nextBtn.style.display = 'block';
+      currentScene++;
+    }
+  }
+
+  currentScene = 0;
+  nextDialog();
+
+</script>
+
+</body>
+</html>
