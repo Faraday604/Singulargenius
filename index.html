@@ -227,9 +227,9 @@
       </p>
     </section>
 
-   <section class="box" id="beaver-countdown">
+ <section class="box" id="beaver-countdown">
   <h2>Відлік до виходу інді-гри "Бівень 3Д"</h2>
-  <p class="terminal-text" id="beaver-timer">59:59:59</p>
+  <p class="terminal-text" id="beaver-timer">4:59:59</p>
 </section>
 
     <section class="box" style="text-align:center;">
@@ -317,13 +317,28 @@
     }
   </script>
 
-  <script>
+<script>
   const timerDisplay = document.getElementById("beaver-timer");
 
+  let hours = 4;
+  let minutes = 59;
+  let seconds = 59;
+
   setInterval(() => {
-    // Always show 59:59:59 — the joke!
-    timerDisplay.textContent = "59:59:59";
-  }, 1000); // Pretend it's ticking
+    seconds--;
+
+  if (seconds === 0) {
+  seconds = 59;
+} else {
+  seconds--;
+}
+
+    const hStr = String(hours).padStart(1, '0');
+    const mStr = String(minutes).padStart(2, '0');
+    const sStr = String(seconds).padStart(2, '0');
+
+    timerDisplay.textContent = `${hStr}:${mStr}:${sStr}`;
+  }, 1000);
 </script>
 
 </body>
