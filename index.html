@@ -145,27 +145,39 @@
       padding: 10px 0;
     }
 
-   #click-button,
-#go-second-page {
-  font-family: 'Courier New', monospace;
-  background-color: black;
-  color: #00ff00;
-  border: 2px solid #00ff00;
-  font-size: 18px;
-  padding: 10px 20px;
-  text-transform: uppercase;
-  cursor: url('https://www.dropbox.com/scl/fi/b08ub8z0imt0akdhaxb4k/link.cur?rlkey=aaoj9v3grlenr0rszdm6e2ewk&raw=1'), pointer;
-  box-shadow: none;
-  outline: none;
-  transition: background-color 0.2s, color 0.2s;
-  border-radius: 0;
-}
+    #click-button,
+    #go-second-page {
+      font-family: 'Courier New', monospace;
+      background-color: black;
+      color: #00ff00;
+      border: 2px solid #00ff00;
+      font-size: 18px;
+      padding: 10px 20px;
+      text-transform: uppercase;
+      cursor: url('https://www.dropbox.com/scl/fi/b08ub8z0imt0akdhaxb4k/link.cur?rlkey=aaoj9v3grlenr0rszdm6e2ewk&raw=1'), pointer;
+      box-shadow: none;
+      outline: none;
+      transition: background-color 0.2s, color 0.2s;
+      border-radius: 0;
+    }
 
-#click-button:hover,
-#go-second-page:hover {
-  background-color: #00ff00;
-  color: black;
-}
+    .door {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      image-rendering: auto;
+      filter: none;
+      box-shadow: none;
+    }
+
+    #click-button:hover,
+    #go-second-page:hover {
+      background-color: #00ff00;
+      color: black;
+    }
 
     #click-count {
       color: white;
@@ -191,25 +203,26 @@
       margin-top: 20px;
     }
 
- .ascii-box {
-  overflow: auto;
-  white-space: pre;
-  font-family: monospace;
-  font-size: 12px; /* **ВЖЕ НЕ** чортова дюжина */
-  line-height: 1.1;
-  max-height: 320px;
-  word-break: break-word;
-  box-sizing: border-box;
-}
-    
-.ascii-art {
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
+    .ascii-box {
+      overflow: auto;
+      white-space: pre;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.1;
+      max-height: 320px;
+      word-break: break-word;
+      box-sizing: border-box;
+    }
+
+    .ascii-art {
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
   </style>
 </head>
 <body>
-
+    <a href="hall.html">
+    <img src="https://i.imgur.com/UePXBHb.gif" alt="Back" class="door" />
   <h1 class="glitch" data-text="Сингулярний Геній">Сингулярний Геній</h1>
 
   <marquee behavior="scroll" direction="left" scrollamount="4">
@@ -243,10 +256,10 @@
       </p>
     </section>
 
- <section class="box" id="beaver-countdown">
-  <h2>Відлік до виходу інді-гри "Бівень 3Д"</h2>
-  <p class="terminal-text" id="beaver-timer">4:59:59</p>
-</section>
+    <section class="box" id="beaver-countdown">
+      <h2>Відлік до виходу інді-гри "Бівень 3Д"</h2>
+      <p class="terminal-text" id="beaver-timer">4:59:59</p>
+    </section>
 
     <section class="box" style="text-align:center;">
       <div>
@@ -262,8 +275,8 @@
       <img id="secret-image" src="https://i.imgur.com/RV7jCyY.png" alt="Secret Image" />
     </section>
 
-  <section class="box ascii-box">
-  <pre class="ascii-art">
+    <section class="box ascii-box">
+      <pre class="ascii-art">
 ⣿⣿⣿⣿⣿⣿⡿⠛⣛⣛⣛⣛⣛⣛⣛⣛⣛⣛⡛⠛⠿⠿⢿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⡿⢃⣴⣿⠿⣻⢽⣲⠿⠭⠭⣽⣿⣓⣛⣛⣓⣲⣶⣢⣍⠻⢿⣿⣿
 ⣿⣿⣿⡿⢁⣾⣿⣵⡫⣪⣷⠿⠿⢿⣷⣹⣿⣿⣿⢲⣾⣿⣾⡽⣿⣷⠈⣿⣿
@@ -277,13 +290,14 @@
 ⣿⣿⣿⣿⣿⣿⣿⣷⣦⣉⠒⠭⣖⣩⡟⠛⣻⣿⣿⣿⣿⣿⣟⣫⣾⢏⣿⠘⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣍⡛⠿⠿⣶⣶⣿⣿⣿⣿⣿⣾⣿⠟⣰⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣤⣭⣍⣉⣛⣋⣭⣥⣾⣿⣿
-  </pre>
-</section>
-      </div>
+      </pre>
+    </section>
+  </div>
 
   <footer>
     © 2025 Сингулярний Геній | Я бачу очі
   </footer>
+  </a>
 
   <script>
     const starCount = 150;
@@ -351,29 +365,27 @@
     }
   </script>
 
-<script>
-const timerDisplay = document.getElementById("beaver-timer");
+  <script>
+    const timerDisplay = document.getElementById("beaver-timer");
 
-let hours = 4;
-let minutes = 59;
-let seconds = 59;
+    let hours = 4;
+    let minutes = 59;
+    let seconds = 59;
 
-setInterval(() => {
-  if (seconds === 0) {
-    seconds = 59; // Reset seconds, never decrement minutes
-  } else {
-    seconds--;
-  }
+    setInterval(() => {
+      if (seconds === 0) {
+        seconds = 59;
+      } else {
+        seconds--;
+      }
 
-  const hStr = String(hours).padStart(1, '0');
-  const mStr = String(minutes).padStart(2, '0');
-  const sStr = String(seconds).padStart(2, '0');
+      const hStr = String(hours).padStart(1, '0');
+      const mStr = String(minutes).padStart(2, '0');
+      const sStr = String(seconds).padStart(2, '0');
 
-  timerDisplay.textContent = `${hStr}:${mStr}:${sStr}`;
-}, 1000);
-</script>
+      timerDisplay.textContent = `${hStr}:${mStr}:${sStr}`;
+    }, 1000);
+  </script>
 
 </body>
 </html>
-
-
