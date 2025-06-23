@@ -318,27 +318,25 @@
   </script>
 
 <script>
-  const timerDisplay = document.getElementById("beaver-timer");
+const timerDisplay = document.getElementById("beaver-timer");
 
-  let hours = 4;
-  let minutes = 59;
-  let seconds = 59;
+let hours = 4;
+let minutes = 59;
+let seconds = 59;
 
-  setInterval(() => {
-    seconds--;
-
+setInterval(() => {
   if (seconds === 0) {
-  seconds = 59;
-} else {
-  seconds--;
-}
+    seconds = 59; // Reset seconds, never decrement minutes
+  } else {
+    seconds--;
+  }
 
-    const hStr = String(hours).padStart(1, '0');
-    const mStr = String(minutes).padStart(2, '0');
-    const sStr = String(seconds).padStart(2, '0');
+  const hStr = String(hours).padStart(1, '0');
+  const mStr = String(minutes).padStart(2, '0');
+  const sStr = String(seconds).padStart(2, '0');
 
-    timerDisplay.textContent = ${hStr}:${mStr}:${sStr};
-  }, 1000);
+  timerDisplay.textContent = `${hStr}:${mStr}:${sStr}`;
+}, 1000);
 </script>
 
 </body>
