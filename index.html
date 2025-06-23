@@ -191,15 +191,17 @@
       margin-top: 20px;
     }
 
-    .ascii-box {
-  overflow-x: auto;
+ .ascii-box {
+  overflow: auto;
   white-space: pre;
   font-family: monospace;
-  font-size: 10px;
-  line-height: 1.05;
-  max-height: 280px;
+  font-size: 11px; /* bumped up from 10 */
+  line-height: 1.1;
+  max-height: 320px;
+  word-break: break-word;
+  box-sizing: border-box;
 }
-
+    
 .ascii-art {
   overflow-x: auto;
   overflow-y: auto;
