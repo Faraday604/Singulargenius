@@ -227,14 +227,10 @@
       </p>
     </section>
 
-    <section class="box">
-      <h2>Контакти</h2>
-      <p class="terminal-text">
-        Telegram: @yourtelegram<br />
-        Discord: yourdiscord#1234<br />
-        Twitter: @yourtwitter
-      </p>
-    </section>
+   <section class="box" id="beaver-countdown">
+  <h2>Відлік до виходу інді-гри "Бівень 3Д"</h2>
+  <p class="terminal-text" id="beaver-timer">59:59:59</p>
+</section>
 
     <section class="box" style="text-align:center;">
       <div>
@@ -320,6 +316,15 @@
       }
     }
   </script>
+
+  <script>
+  const timerDisplay = document.getElementById("beaver-timer");
+
+  setInterval(() => {
+    // Always show 59:59:59 — the joke!
+    timerDisplay.textContent = "59:59:59";
+  }, 1000); // Pretend it's ticking
+</script>
 
 </body>
 </html>
